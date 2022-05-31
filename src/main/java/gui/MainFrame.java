@@ -2,6 +2,8 @@ package gui;
 
 import app.AppCore;
 import app.Main;
+import gui.controller.ActionManager;
+import gui.view.Toolbar;
 import lombok.Data;
 import observer.Notification;
 import observer.Subscriber;
@@ -23,9 +25,14 @@ public class MainFrame extends JFrame implements Subscriber {
 
     private AppCore appCore;
     private JTable jTable;
+    private TextArea textArea;
     private JScrollPane jsp;
     private JTree jTree;
     private JPanel left;
+    private JPanel right;
+    private JToolBar toolBar;
+    private ActionManager actionManager;
+
 
     private MainFrame() {
 
@@ -42,12 +49,25 @@ public class MainFrame extends JFrame implements Subscriber {
 
     private void initialise() {
 
+        actionManager = new ActionManager();
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        toolBar = new Toolbar();
+
+        right = new JPanel(new BorderLayout());
+
+        textArea = new TextArea();
         jTable = new JTable();
         jTable.setPreferredScrollableViewportSize(new Dimension(500, 400));
         jTable.setFillsViewportHeight(true);
-        this.add(new JScrollPane(jTable));
+        this.setLayout(new BorderLayout());
+
+        right.add(textArea, BorderLayout.NORTH);
+        right.add(new JScrollPane(jTable), BorderLayout.SOUTH);
+
+        add(toolBar,BorderLayout.NORTH);
+        add(right, BorderLayout.EAST);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -74,6 +94,9 @@ public class MainFrame extends JFrame implements Subscriber {
         pack();
     }
 
+    public ActionManager getActionManager() {
+        return actionManager;
+    }
 
     @Override
     public void update(Notification notification) {

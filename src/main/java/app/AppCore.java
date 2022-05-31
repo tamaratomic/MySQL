@@ -5,7 +5,7 @@ import database.DatabaseImplementation;
 import database.MYSQLrepository;
 import database.settings.Settings;
 import database.settings.SettingsImplementation;
-import gui.table.TableModel;
+import gui.model.TableModel;
 import lombok.Getter;
 import lombok.Setter;
 import observer.Notification;

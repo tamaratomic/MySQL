@@ -1,4 +1,4 @@
-package gui.table;
+package gui.model;
 
 import lombok.Data;
 import resource.data.Row;
