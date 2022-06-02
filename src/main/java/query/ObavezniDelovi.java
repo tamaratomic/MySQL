@@ -1,5 +1,8 @@
 package query;
 
+import java.util.List;
+import java.util.Map;
+
 public class ObavezniDelovi implements Rule{
 
     private String name = "Obavenzi delovi";
@@ -7,7 +10,7 @@ public class ObavezniDelovi implements Rule{
 
 
     @Override
-    public String check(String query) {
+    public String check(Map<String, List<String>> map, Object object) {
         return null;
     }
 }
