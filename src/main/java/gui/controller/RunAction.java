@@ -1,5 +1,8 @@
 package gui.controller;
 
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import gui.MainFrame;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -14,6 +17,10 @@ public class RunAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String text = MainFrame.getInstance().getTextArea().getText();
+        String formatiranText = SqlFormatter.format(text);
+
+        MainFrame.getInstance().getAppCore().run(formatiranText);
 
     }
 }

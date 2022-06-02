@@ -12,8 +12,10 @@ import java.util.List;
 public class Attribute extends DBNodeComposite {
 
 
+    //tip u bazi int,char...
     private AttributeType attributeType;
     private int length;
+    //da li je ovaj atribud strni kljuc
     private Attribute inRelationWith;
 
     public Attribute(String name, DBNode parent) {

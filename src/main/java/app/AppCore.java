@@ -11,6 +11,7 @@ import lombok.Setter;
 import observer.Notification;
 import observer.enums.NotificationCode;
 import observer.implementation.PublisherImplementation;
+import query.Checker;
 import resource.implementation.InformationResource;
 import tree.Tree;
 import tree.implementation.TreeImplementation;
@@ -27,12 +28,15 @@ public class AppCore extends PublisherImplementation {
     private TableModel tableModel;
     private DefaultTreeModel defaultTreeModel;
     private Tree tree;
+    private Checker checker;
+
 
     public AppCore() {
         this.settings = initSettings();
         this.database = new DatabaseImplementation(new MYSQLrepository(this.settings));
         this.tableModel = new TableModel();
         this.tree = new TreeImplementation();
+        this.checker = new Checker();
 
     }
 
@@ -60,6 +64,9 @@ public class AppCore extends PublisherImplementation {
     }
 
 
+    public void run(String query){
+        checker.check(query);
+    }
 
 
 }

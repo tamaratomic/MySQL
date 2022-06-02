@@ -3,6 +3,8 @@ package gui.view;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 
+
+import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -21,6 +23,7 @@ public class PrettyImplementation {
         String p="\\bselect";
         Pattern pt=Pattern.compile(p);
         Matcher m= pt.matcher(formatiranText);
+
         while ( m.find())
         {  int strt=m.start(); int end=m.end();
             String s1=m.group();

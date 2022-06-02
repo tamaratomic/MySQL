@@ -10,7 +10,10 @@ import java.util.Map;
 @Data
 public class Row {
 
+    //maticna tabela
     private String name;
+    //kljuc vrednost
+    //reagion id = 2, region name = region2
     private Map<String, Object> fields;
 
 
