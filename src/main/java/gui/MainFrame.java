@@ -1,22 +1,18 @@
 package gui;
 
 import app.AppCore;
-import app.Main;
 import gui.controller.ActionManager;
+import gui.model.DescriptionRepository;
+import gui.view.CommandsImpl;
 import gui.view.Toolbar;
 import lombok.Data;
 import observer.Notification;
 import observer.Subscriber;
-import observer.enums.NotificationCode;
-import resource.implementation.InformationResource;
 import tree.implementation.SelectionListener;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.util.Vector;
 
 @Data
 public class MainFrame extends JFrame implements Subscriber {
@@ -25,13 +21,14 @@ public class MainFrame extends JFrame implements Subscriber {
 
     private AppCore appCore;
     private JTable jTable;
-    private TextArea textArea;
+    private JTextPane textPane;
     private JScrollPane jsp;
     private JTree jTree;
     private JPanel left;
     private JPanel right;
     private JToolBar toolBar;
     private ActionManager actionManager;
+    private Commands commands;
 
 
     private MainFrame() {
@@ -49,6 +46,10 @@ public class MainFrame extends JFrame implements Subscriber {
 
     private void initialise() {
 
+        commands = new CommandsImpl();
+        DescriptionRepository dr = new DescriptionRepository();
+        System.out.println(dr.getJsonObject());
+
         actionManager = new ActionManager();
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,13 +58,14 @@ public class MainFrame extends JFrame implements Subscriber {
 
         right = new JPanel(new BorderLayout());
 
-        textArea = new TextArea();
+        textPane = new JTextPane();
+        textPane.setPreferredSize(new Dimension(500, 200));
         jTable = new JTable();
-        jTable.setPreferredScrollableViewportSize(new Dimension(500, 400));
+        jTable.setPreferredScrollableViewportSize(new Dimension(500, 300));
         jTable.setFillsViewportHeight(true);
         this.setLayout(new BorderLayout());
 
-        right.add(textArea, BorderLayout.NORTH);
+        right.add(new JScrollPane(textPane), BorderLayout.NORTH);
         right.add(new JScrollPane(jTable), BorderLayout.SOUTH);
 
         add(toolBar,BorderLayout.NORTH);

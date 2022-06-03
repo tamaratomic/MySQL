@@ -1,7 +1,6 @@
 package gui.controller;
 
 import gui.MainFrame;
-import gui.view.PrettyImplementation;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,6 +17,6 @@ public class PrettyAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new PrettyImplementation().ulepsaj(MainFrame.getInstance().getTextArea());
+        MainFrame.getInstance().getCommands().ulepsaj(MainFrame.getInstance().getTextPane());
     }
 }
