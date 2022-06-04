@@ -5,25 +5,14 @@ package gui.view;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import gui.Commands;
 import gui.model.TableModel;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import tree.TreeItem;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import java.awt.*;
+import javax.swing.tree.TreeNode;
+import javax.xml.crypto.Data;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.List;
@@ -123,13 +112,22 @@ public class CommandsImpl implements Commands {
     }
 
     @Override
-    public void bulkImport() {
+    public void bulkImport(Object lastSelectedPathComponent) {
+
+
+        TreeItem node = (TreeItem)lastSelectedPathComponent;
+        String tabela = " ";
+        try {
+            tabela = node.getName();
+        }catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Tabela mora biti selektovana");
+        }
 
 
         String username = "bp_tim24";
         String password = "mmhmUUnS";
 
-        String csvFilePath = "./rez.csv";
+        String csvFilePath = "./"+tabela+".csv";
 
         int batchSize = 20;
 
@@ -139,8 +137,19 @@ public class CommandsImpl implements Commands {
             connection = DriverManager.getConnection("jdbc:mysql://"+"164.92.145.191"+"/"+"bp_tim24",username,password);
 
             connection.setAutoCommit(false);
+            String sql = null;
+            if(tabela.equals("countries"))
+                sql = "INSERT INTO " + tabela + "(country_name, region_id, country_id) VALUES (?, ?, ?)";
+            else if(tabela.equals("departments"))
+                sql = "INSERT INTO " + tabela + "(department_id, manager_id, department_name, location_id) VALUES (?, ?, ?, ?)";
+            else if(tabela.equals("employees"))
+                sql = "INSERT INTO " + tabela + "(commission_pct, manager_id, department_id, job_id, employee_id, last_name, phone_number, hire_date, salary, first_name, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            else if(tabela.equals("jobs"))
+                sql = "INSERT INTO " + tabela + "(max_salary, job_id, min_salary, job_title) VALUES (?, ?, ?, ?)";
+            else if(tabela.equals("job_history"))
+                sql = "INSERT INTO " + tabela + "(end_date, department_id, job_id, employee_id, start_date) VALUES (?, ?, ?, ?, ?)";
 
-            String sql = "INSERT INTO  countries (country_name, region_id, country_id) VALUES (?, ?, ?)";
+
             PreparedStatement statement = connection.prepareStatement(sql);
 
             BufferedReader lineReader = new BufferedReader(new FileReader(csvFilePath));
@@ -152,20 +161,131 @@ public class CommandsImpl implements Commands {
 
             while ((lineText = lineReader.readLine()) != null) {
                 String[] data = lineText.split(",");
-                String country_name = data[0];
-                String region_id = data[1];
-                String country_id = data[2];
 
-
-                statement.setString(1, country_name);
-
-                int i_region_id = Integer.parseInt(region_id);
-                statement.setInt(2, i_region_id);
+                if(tabela.equals("countries")) {
+                    String country_name = data[0];
+                    String region_id = data[1];
+                    String country_id = data[2];
 
 
 
+                    statement.setString(1, country_name);
 
-                statement.setString(3, country_id);
+                    int i_region_id = Integer.parseInt(region_id);
+                    statement.setInt(2, i_region_id);
+
+                    statement.setString(3, country_id);
+                }
+                else if(tabela.equals("departments")) {
+                    String department_id = data[0];
+                    String manager_id = data[1];
+                    String department_name = data[2];
+                    String location_id = data[3];
+
+                    int i_department_id = Integer.parseInt(department_id);
+                    statement.setInt(1, i_department_id);
+
+                    int i_manager_id = Integer.parseInt(manager_id);
+                    statement.setInt(2, i_manager_id);
+
+                    statement.setString(3, department_name);
+
+                    int i_location_id = Integer.parseInt(location_id);
+                    statement.setInt(4, i_location_id);
+
+
+                }
+
+                else if(tabela.equals("jobs")) {
+                    String max_salary = data[0];
+                    String job_id = data[1];
+                    String min_salary = data[2];
+                    String job_title = data[3];
+
+                    float f_max_salary = Float.parseFloat(max_salary);
+                    statement.setFloat(1, f_max_salary);
+
+                    statement.setString(2, job_id);
+
+                    float f_min_salary = Float.parseFloat(min_salary);
+                    statement.setFloat(3, f_min_salary);
+
+                    statement.setString(4, job_title);
+
+                }
+                else if(tabela.equals("job_history")) {
+                    String end_date = data[0];
+                    String department_id = data[1];
+                    String job_id = data[2];
+                    String employee_id = data[3];
+                    String start_date = data[4];
+
+                    Date d_end_date = Date.valueOf(end_date);
+                    statement.setDate(1, d_end_date);
+
+                    int i_department_id = Integer.valueOf(department_id);
+                    statement.setInt(2, i_department_id);
+
+                    statement.setString(3, job_id);
+
+                    int i_employee_id = Integer.valueOf(employee_id);
+                    statement.setInt(4, i_employee_id);
+
+                    Date d_start_date = Date.valueOf(start_date);
+                    statement.setDate(5, d_start_date);
+
+                }
+                else if(tabela.equals("employees")) {
+                    String commission_pct = data[0];
+                    String manager_id = data[1];
+                    String department_id = data[2];
+                    String job_id = data[3];
+                    String employee_id = data[4];
+                    String last_name = data[5];
+                    String phone_number = data[6];
+                    String hire_date = data[7];
+                    String salary = data[8];
+                    String first_name = data[9];
+                    String email = data[10];
+
+                    if(!(commission_pct.equals("null"))){
+                        float f_commission_pct = Float.parseFloat(commission_pct);
+                        statement.setFloat(1, f_commission_pct);
+                    }else{
+                        statement.setNull(1, Types.NULL);
+                    }
+
+                    if(!(manager_id.equals("null"))) {
+                        int i_manager_id = Integer.parseInt(manager_id);
+                        statement.setInt(2, i_manager_id);
+                    }else{
+                        statement.setNull(2, Types.NULL);
+                    }
+
+                    int i_department_id = Integer.parseInt(department_id);
+                    statement.setInt(3, i_department_id);
+
+                    statement.setString(4, job_id);
+
+                    int i_employee_id = Integer.parseInt(employee_id);
+                    statement.setInt(5, i_employee_id);
+
+                    statement.setString(6, last_name);
+
+                    statement.setString(7, phone_number);
+
+                    Date d_hire_date = Date.valueOf(hire_date);
+                    statement.setDate(8, d_hire_date);
+
+                    float f_salary = Float.parseFloat(salary);
+                    statement.setFloat(9, f_salary);
+
+                    statement.setString(10, first_name);
+
+                    statement.setString(11, email);
+                }
+
+
 
                 statement.addBatch();
 
@@ -182,7 +302,12 @@ public class CommandsImpl implements Commands {
             connection.commit();
             connection.close();
 
-        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Uspesno dodavanje entiteta u tabelu " + tabela);
+
+        } catch (BatchUpdateException e) {
+            JOptionPane.showMessageDialog(null, "Vrednost iz CSV fajla se vec nalazi u bazi");
+            e.printStackTrace();
+        }catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

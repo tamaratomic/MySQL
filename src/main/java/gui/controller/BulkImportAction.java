@@ -16,6 +16,7 @@ public class BulkImportAction extends AbstractAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MainFrame.getInstance().getCommands().bulkImport();
+        MainFrame.getInstance().getCommands().bulkImport(MainFrame.getInstance().getJTree().getLastSelectedPathComponent());
+
     }
 }
