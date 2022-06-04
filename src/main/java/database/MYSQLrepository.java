@@ -136,7 +136,8 @@ public class MYSQLrepository implements Repository{
         try{
             this.initConnection();
 
-            String query = "SELECT * FROM " + from;
+            //String query = "SELECT * FROM " + from;
+            String query = from;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
             ResultSetMetaData resultSetMetaData = rs.getMetaData();

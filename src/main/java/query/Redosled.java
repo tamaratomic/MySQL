@@ -14,6 +14,10 @@ public class Redosled implements Rule{
 
         if(object instanceof Statement){
             List<Statement> list = (List<Statement>) object;
+            String prethodni;
+            for(String s: map.keySet()){
+
+            }
             for(int j = 1; j < map.keySet().size(); j++){
                 for(int i = j; i < list.size(); i++){
 

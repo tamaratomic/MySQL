@@ -14,6 +14,7 @@ public class Checker {
         if(rules.isEmpty()){
             rules.add(new Redosled());
             rules.add(new ObavezniDelovi());
+            rules.add(new TabeleIKolone());
         }
 
 
@@ -29,13 +30,15 @@ public class Checker {
 
 
     public void check(String query){
-        List<String> st = Arrays.asList(query.split("\n"));
+        System.out.println(query);
+        List<String> st = Arrays.asList(query.split(" "));
 
         System.out.println(st);
         String key = "";
         for(int i = 0; i < st.size(); i++){
             if(st.get(i).equalsIgnoreCase("select") || st.get(i).equalsIgnoreCase("from")
                 || st.get(i).equalsIgnoreCase("where")){
+
                 mapa.put(st.get(i), new ArrayList<>());
                 key = st.get(i);
             }else{
@@ -44,6 +47,10 @@ public class Checker {
                     StringBuilder sb = new StringBuilder(st.get(i));
                     sb.deleteCharAt(st.get(i).length() - 1);
                     value = sb.toString();
+                }
+                if(st.get(i).contains("  ")) {
+                    st.get(i).replace("  ", "");
+                    value = st.get(i);
                 }
 
 
