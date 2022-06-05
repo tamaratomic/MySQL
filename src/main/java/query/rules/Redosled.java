@@ -16,6 +16,8 @@ public class Redosled implements Rule {
 
     @Override
     public String check(List<String> query,Map<String, List<String>> map, Object object) {
+        System.out.println("REDOSLED");
+
 
         List<Statement> list  = (List<Statement>) object;
        // System.out.println("da li je lista 0 " + list.isEmpty());

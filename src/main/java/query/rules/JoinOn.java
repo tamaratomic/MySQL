@@ -17,6 +17,7 @@ public class JoinOn implements Rule {
 
     @Override
     public String check(List<String> l, Map<String, List<String>> map, Object object) {
+        System.out.println("JOIN");
 
         if(!map.keySet().contains("JOIN")){
             return null;
@@ -74,7 +75,8 @@ public class JoinOn implements Rule {
                    // System.out.println("for 2");
                     if(node1.getName().equalsIgnoreCase(straniKljuc)){
                         System.out.println("STRANI KLJUC");
-                        break;
+                        return null;
+
                     }
                     if(listaAtributaJoin.get(listaAtributaJoin.size()-1).equals(node1)){
                         System.out.println("NIJE STRANI KLJUC");

@@ -15,6 +15,9 @@ public class GroupBy implements Rule {
     @Override
     public String check(List<String> query, Map<String, List<String>> map, Object object) {
 
+        System.out.println("GROUP BY");
+
+
         if(map.get("SELECT").size() > 1){
             for(String s : map.get("SELECT")){
                 String st = s.toUpperCase();

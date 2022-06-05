@@ -14,6 +14,8 @@ public class ObavezniDelovi implements Rule {
     @Override
     public String check(List<String> l, Map<String, List<String>> map, Object object) {
 
+        System.out.println("OBAVEZNI DELOVI");
+
         if(map.keySet().contains("JOIN")){
             if(!map.keySet().contains("ON") && !map.containsKey("USING")){
                 System.out.println("NEISPRAVAN JOIN");

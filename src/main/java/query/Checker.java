@@ -22,9 +22,10 @@ public class Checker {
         if(rules.isEmpty()){
             rules.add(new Redosled());
             rules.add(new ObavezniDelovi());
-            rules.add(new TabeleIKolone());
             rules.add(new JoinOn());
+            rules.add(new Where());
             rules.add(new GroupBy());
+            rules.add(new TabeleIKolone());
         }
 
 
