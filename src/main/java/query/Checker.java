@@ -2,6 +2,8 @@ package query;
 
 
 
+import gui.MainFrame;
+
 import java.util.*;
 
 public class Checker {
@@ -153,6 +155,7 @@ public class Checker {
 
 
     public void check(String query){
+        MainFrame.getInstance().setKliknutoP(false);
         mapa.clear();
         System.out.println(query);
         String[] str = query.split(" ");
