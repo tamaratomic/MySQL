@@ -169,7 +169,7 @@ public class CommandsImpl implements Commands {
                     String region_id = data[1];
                     String country_id = data[2];
 
-
+                    System.out.println(data.length);
 
                     statement.setString(1, country_name);
 
