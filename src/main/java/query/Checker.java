@@ -6,6 +6,7 @@ import gui.MainFrame;
 
 import query.rules.*;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Checker {
@@ -17,6 +18,8 @@ public class Checker {
     private List<Rule> rules = new ArrayList<>();
     private Map<String, List<String>> mapa = new HashMap<>();
     private List<String> keywords = new ArrayList<>();
+    private List<Boolean> ispravnost = new ArrayList<>();
+    private List<String> aliasi = new ArrayList<>();
 
     public Checker() {
         if(rules.isEmpty()){
@@ -26,6 +29,7 @@ public class Checker {
             rules.add(new Where());
             rules.add(new GroupBy());
             rules.add(new TabeleIKolone());
+            rules.add(new BI_Csv());
         }
 
 
@@ -159,7 +163,7 @@ public class Checker {
 
     }
 
-    public void check(String query){
+    public boolean check(String query){
         MainFrame.getInstance().setKliknutoP(false);
         mapa.clear();
         mapa = new HashMap<>();
@@ -195,7 +199,18 @@ public class Checker {
                 }
             }
 
-            if(i > 0 && str[i-1].equalsIgnoreCase("as")){
+            if(i > 0 && str[i].equalsIgnoreCase("as")){
+                i++;
+                while(!keywords.contains(str[i])){
+                    if(str[i].contains(",")){
+                        aliasi.add(str[i].replace(",", ""));
+                        break;
+                    }
+                }
+
+                aliasi.add(str[i]);
+
+
 
                 int br = 0;
                 int i2 = i;
@@ -208,7 +223,7 @@ public class Checker {
                 if(br>=1 && str[i2].contains(",")){
                     System.out.println(str[i2]);
                     System.out.println("Aliasi moraju biti pod navodnicima");
-                    return;
+                    //return;
                 }else {
 
                     String s = "";
@@ -245,24 +260,12 @@ public class Checker {
                         continue;
                     }
                 }
-//                    if(!keywords.contains(str[i+1].toUpperCase())) {
-//                        System.out.println("ALIASI MORAJU BITI POD NAVODNICIMA");
-//                    }else {
-//                       // st.add(str[i]);
-//                    }
-
-                //continue;
 
             }
                 if(!str[i].equalsIgnoreCase("as") && str[i].length()>1) {
                     st.add(str[i]);
                 }
 
-
-
-//            if(str[i].length()!=1){
-//                st.add(str[i].toUpperCase());
-//            }
 
         }
 
@@ -278,9 +281,7 @@ public class Checker {
 
             if(keywords.contains(st.get(i).toUpperCase())){
                 System.out.println("U IFUUUUUUU");
-//                if(st.get(i-1).equalsIgnoreCase("as")){
-//                    key = "SELECT";
-//                }
+
                 if(mapa.containsKey(st.get(i))){
                     key = st.get(i)+(++j);
                     mapa.put(key, new ArrayList<>());
@@ -300,22 +301,6 @@ public class Checker {
                 }
 
                 mapa.get(key).add(s);
-//            if(st.get(i).equalsIgnoreCase("select") || st.get(i).equalsIgnoreCase("from")
-//                || st.get(i).equalsIgnoreCase("where")){
-//
-//                mapa.put(st.get(i), new ArrayList<>());
-//                key = st.get(i);
-//            }else{
-//                String value = st.get(i);
-//                if(st.get(i).contains("  ")) {
-//                    st.get(i).replace("  ", "");
-//                    value = st.get(i);
-//                }
-//
-//
-//                    mapa.get(key).add(value);
-
-
 
 
 
@@ -328,28 +313,35 @@ public class Checker {
         if(mapa.containsKey("SELECT")){
             System.out.println("SELECT");
             for (Rule r:rules){
-                r.check(st, mapa, selectStatements);
+               ispravnost.add(r.check(st, mapa, selectStatements));
             }
         }else {
             if(mapa.containsKey("INSERT")){
                 for (Rule r:rules){
-                    r.check(st, mapa, insertStatements);
+                    ispravnost.add(r.check(st, mapa, insertStatements));
                 }
             }else{
                 if(mapa.containsKey("DELETE")){
                     for (Rule r:rules){
-                        r.check(st, mapa, deleteStatements);
+                        ispravnost.add(r.check(st, mapa, deleteStatements));
                     }
                 }else {
                     if(mapa.containsKey("UPDATE")){
                         for (Rule r:rules){
-                            r.check(st, mapa, updateStatements);
+                            ispravnost.add(r.check(st, mapa, updateStatements));
                         }
+                    }else{
+                        JOptionPane.showMessageDialog(null, st.get(0) + " neispravna rec.");
                     }
                 }
             }
         }
 
+        if(ispravnost.contains(false)){
+            return false;
+        }else {
+            return true;
+        }
 
     }
 }

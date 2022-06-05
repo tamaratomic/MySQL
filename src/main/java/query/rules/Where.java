@@ -2,6 +2,7 @@ package query.rules;
 
 import query.Rule;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class Where implements Rule {
 
 
     @Override
-    public String check(List<String> query, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> query, Map<String, List<String>> map, Object object) {
 
         System.out.println("WHERE");
 
@@ -26,8 +27,9 @@ public class Where implements Rule {
                         System.out.println("U WHILE");
                         if(s.contains("SUM") || s.contains("COUNT") || s.contains("AVG")
                                 || s.contains("MIN") || s.contains("MAX")){
-                            System.out.println("WHERE NE SME DA SADRZI FUNKCIJU AGREGACIJE");
-                            return null;
+                            JOptionPane.showMessageDialog(null, "WHERE NE SME DA SADRZI FUNKCIJU AGREGACIJE");
+
+                            return false;
                         }
                         i2++;
                     }
@@ -37,6 +39,6 @@ public class Where implements Rule {
 
 
 
-        return null;
+        return true;
     }
 }

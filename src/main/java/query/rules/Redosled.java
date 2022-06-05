@@ -3,6 +3,7 @@ package query.rules;
 import query.Rule;
 import query.Statement;
 
+import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,10 @@ public class Redosled implements Rule {
 
 
     @Override
-    public String check(List<String> query,Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> query,Map<String, List<String>> map, Object object) {
         System.out.println("REDOSLED");
+
+
 
 
         List<Statement> list  = (List<Statement>) object;
@@ -33,6 +36,8 @@ public class Redosled implements Rule {
                             br = s.getPriority();
                         }else{
                             System.out.println("POGRESTAN REDOSLED");
+                            JOptionPane.showMessageDialog(null, "Pogresan redosled." + s.getName() + " nije na ispravnom mestu");
+                            return false;
                         }
                         break;
                     }
@@ -41,6 +46,6 @@ public class Redosled implements Rule {
         }
 
 
-        return null;
+        return true;
     }
 }

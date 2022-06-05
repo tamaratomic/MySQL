@@ -9,6 +9,7 @@ import resource.DBNodeComposite;
 import resource.data.Row;
 import tree.TreeItem;
 
+import javax.swing.*;
 import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TabeleIKolone implements Rule {
 
 
     @Override
-    public String check(List<String> l, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> l, Map<String, List<String>> map, Object object) {
         System.out.println("TABELE I KOLONE");
 
         TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
@@ -31,13 +32,16 @@ public class TabeleIKolone implements Rule {
 //        System.out.println(map.get("FROM"));
 //        System.out.println("NAZIV TABELE " + nazivTabele.get(0));
 
-        List<DBNode> listaAtributa = null;
+        List<DBNode> listaAtributa = new ArrayList<>();
 
 
         for(DBNode node : list){
             if(node.getName().equalsIgnoreCase(nazivTabele.get(0))) {
                 listaAtributa = ((DBNodeComposite) node).getChildren();
                 break;
+            }
+            if(node.equals(list.get(list.size()-1))){
+                JOptionPane.showMessageDialog(null, "Tabela " + nazivTabele + " ne postoji.");
             }
         }
 
@@ -54,18 +58,22 @@ public class TabeleIKolone implements Rule {
                 nazivi.add(node.getName());
                 //System.out.println(node.getName());
             }
-            for(String s: map.get(query)){
-                if(nazivi.contains(s.toLowerCase()) || s.contains("%") || s.contains("(") || s.contains(")")){
-                    continue;
-                }else{
+            if(!query.equalsIgnoreCase("in")) {
+                for (String s : map.get(query)) {
+                    if (nazivi.contains(s.toLowerCase()) || s.contains("%") || s.contains("(") || s.contains(")")
+                            || s.contains("=") || s.contains("*")|| s.contains("/")|| s.contains("%")) {
+                        continue;
+                    } else {
 
-                    System.out.println("Tabela " + nazivTabele + "ne sadrzi " + s);
+                        JOptionPane.showMessageDialog(null, "Tabela " + nazivTabele + " ne sadrzi " + s);
+                        return false;
+                    }
                 }
             }
 
         }
 
 
-        return null;
+        return true;
     }
 }

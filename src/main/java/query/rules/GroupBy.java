@@ -2,6 +2,7 @@ package query.rules;
 
 import query.Rule;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class GroupBy implements Rule {
 
 
     @Override
-    public String check(List<String> query, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> query, Map<String, List<String>> map, Object object) {
 
         System.out.println("GROUP BY");
 
@@ -26,8 +27,9 @@ public class GroupBy implements Rule {
                 if(st.contains("SUM") || st.contains("COUNT") || st.contains("AVG")
                         || st.contains("MIN") || st.contains("MAX")){
                     if(!map.containsKey("GROUP BY")){
-                        System.out.println("POTREBAN GROUP BY");
-                        return null;
+                        JOptionPane.showMessageDialog(null, "POTREBAN GROUP BY");
+
+                        return false;
                     }
                 }
             }
@@ -35,6 +37,6 @@ public class GroupBy implements Rule {
 
 
 
-        return null;
+        return true;
     }
 }

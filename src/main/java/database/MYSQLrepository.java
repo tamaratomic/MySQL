@@ -154,7 +154,7 @@ public class MYSQLrepository implements Repository{
                 row.setName(from);
 
                 for (int i = 1; i<=resultSetMetaData.getColumnCount(); i++){
-                    row.addField(resultSetMetaData.getColumnName(i), rs.getString(i));
+                    row.addField(resultSetMetaData.getColumnLabel(i), rs.getString(i));
                 }
                 rows.add(row);
 

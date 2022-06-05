@@ -2,6 +2,7 @@ package query.rules;
 
 import query.Rule;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -12,23 +13,31 @@ public class ObavezniDelovi implements Rule {
 
 
     @Override
-    public String check(List<String> l, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> l, Map<String, List<String>> map, Object object) {
 
         System.out.println("OBAVEZNI DELOVI");
 
         if(map.keySet().contains("JOIN")){
             if(!map.keySet().contains("ON") && !map.containsKey("USING")){
-                System.out.println("NEISPRAVAN JOIN");
+                JOptionPane.showMessageDialog(null, "Nispravan JOIN.Nedostaje kljucna rec ON ili USING");
+                return false;
             }
         }
         if(map.containsKey("GROUP") && !map.containsKey("BY")){
-            System.out.println("NEISPRAVAN GROUP");
+            JOptionPane.showMessageDialog(null, "Nispravan GROUP.Nedostaje kljucna rec BY");
+            return false;
         }
 
         if(map.containsKey("ORDER") && !map.containsKey("BY")){
-            System.out.println("NEISPRAVAN ORDER");
+            JOptionPane.showMessageDialog(null, "Nedostaje kljucna rec BY");
+            return false;
         }
 
-        return null;
+        if(map.containsKey("SELECT") && !map.containsKey("FROM")){
+            JOptionPane.showMessageDialog(null, "Za SELECT upite je obavezan FROM");
+            return false;
+        }
+
+        return true;
     }
 }

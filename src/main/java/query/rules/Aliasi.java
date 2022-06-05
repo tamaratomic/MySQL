@@ -12,7 +12,7 @@ public class Aliasi implements Rule {
 
 
     @Override
-    public String check(List<String> query, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> query, Map<String, List<String>> map, Object object) {
 
 //
 //        if(map.containsKey("AS")){
@@ -48,6 +48,6 @@ public class Aliasi implements Rule {
 //
 //
 
-        return null;
+        return true;
     }
 }
