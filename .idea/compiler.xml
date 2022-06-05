@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="domaci-ignjat-krdzavac-tamara-tomic" target="8" />
+      <module name="domaci-ignjat-krdzavac-tamara-tomic" target="15" />
     </bytecodeTargetLevel>
   </component>
 </project>

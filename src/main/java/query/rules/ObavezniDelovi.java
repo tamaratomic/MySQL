@@ -1,9 +1,11 @@
-package query;
+package query.rules;
+
+import query.Rule;
 
 import java.util.List;
 import java.util.Map;
 
-public class ObavezniDelovi implements Rule{
+public class ObavezniDelovi implements Rule {
 
     private String name = "Obavenzi delovi";
     //private int prioritet = 0;

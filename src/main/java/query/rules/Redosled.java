@@ -1,11 +1,14 @@
-package query;
+package query.rules;
+
+import query.Rule;
+import query.Statement;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Redosled implements Rule{
+public class Redosled implements Rule {
 
     private String name = "Redosled iskaza";
 

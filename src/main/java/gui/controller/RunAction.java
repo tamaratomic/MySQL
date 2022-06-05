@@ -17,8 +17,8 @@ public class RunAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String text = MainFrame.getInstance().getTextPane().getText();
-        String formatiranText = SqlFormatter.format(text);
+//        String text = MainFrame.getInstance().getTextPane().getText();
+//        String formatiranText = SqlFormatter.format(text);
 
         MainFrame.getInstance().getAppCore().run(MainFrame.getInstance().getTextPane().getText());
 

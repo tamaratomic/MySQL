@@ -1,6 +1,7 @@
-package query;
+package query.rules;
 
 import gui.MainFrame;
+import query.Rule;
 import resource.DBNode;
 import resource.DBNodeComposite;
 import tree.TreeItem;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JoinOn implements Rule{
+public class JoinOn implements Rule {
 
     private String name = "Join on";
 

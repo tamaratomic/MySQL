@@ -1,8 +1,9 @@
-package query;
+package query.rules;
 
 import database.Database;
 import database.MYSQLrepository;
 import gui.MainFrame;
+import query.Rule;
 import resource.DBNode;
 import resource.DBNodeComposite;
 import resource.data.Row;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TabeleIKolone implements Rule{
+public class TabeleIKolone implements Rule {
 
     private String name = "Kolone i tabele";
 
@@ -27,8 +28,8 @@ public class TabeleIKolone implements Rule{
 
 
         List<String> nazivTabele = map.get("FROM");
-        System.out.println(map.get("FROM"));
-        System.out.println("NAZIV TABELE " + nazivTabele.get(0));
+//        System.out.println(map.get("FROM"));
+//        System.out.println("NAZIV TABELE " + nazivTabele.get(0));
 
         List<DBNode> listaAtributa = null;
 
@@ -51,7 +52,7 @@ public class TabeleIKolone implements Rule{
             List<String> nazivi = new ArrayList<>();
             for(DBNode node : listaAtributa){
                 nazivi.add(node.getName());
-                System.out.println(node.getName());
+                //System.out.println(node.getName());
             }
             for(String s: map.get(query)){
                 if(nazivi.contains(s.toLowerCase()) || s.contains("%") || s.contains("(") || s.contains(")")){

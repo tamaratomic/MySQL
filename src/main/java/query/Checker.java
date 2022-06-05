@@ -2,6 +2,11 @@ package query;
 
 
 
+import query.rules.JoinOn;
+import query.rules.ObavezniDelovi;
+import query.rules.Redosled;
+import query.rules.TabeleIKolone;
+
 import java.util.*;
 
 public class Checker {
@@ -151,9 +156,11 @@ public class Checker {
 
     }
 
-
     public void check(String query){
+
+
         mapa.clear();
+        mapa = new HashMap<>();
         System.out.println(query);
         String[] str = query.split(" ");
         List<String> st = new ArrayList<>();
@@ -186,9 +193,59 @@ public class Checker {
                 }
             }
 
-            if(str[i].length()!=1){
-                st.add(str[i].toUpperCase());
+            if(i > 0 && str[i-1].equalsIgnoreCase("as")){
+
+                String s = "";
+                if(str[i].length()>1){
+
+                        while(!str[i].contains(",")) {
+                            System.out.println("WHILE " + str[i]);
+                            if(str[i].contains("\"")){
+                                s = (str[i].replace("\"", ""));
+                            }else{
+                                if(!s.equalsIgnoreCase("")) {
+                                    s = s + " ";
+                                }
+                                s = s + (str[i]);
+                            }
+                           // if (!s.equalsIgnoreCase("") && !str[i].contains("\""))
+                            if(keywords.contains(str[i+1].toUpperCase())) {
+                                break;
+                            }else{
+                                i++;
+                            }
+                        }
+                        if(str[i].contains("\"")){
+                            s = s + " ";
+                            s = s + str[i].replace("\"", "");
+                           // s.replace(",", "");
+                            if(s.contains(",")){
+                                s = s.replace(",", "");
+                            }
+                        }
+                        System.out.println("STRING S = " + s);
+
+                        continue;
+                }
+
+//                    if(!keywords.contains(str[i+1].toUpperCase())) {
+//                        System.out.println("ALIASI MORAJU BITI POD NAVODNICIMA");
+//                    }else {
+//                       // st.add(str[i]);
+//                    }
+
+                //continue;
+
             }
+                if(!str[i].equalsIgnoreCase("as")) {
+                    st.add(str[i]);
+                }
+
+
+
+//            if(str[i].length()!=1){
+//                st.add(str[i].toUpperCase());
+//            }
 
         }
 
@@ -204,39 +261,28 @@ public class Checker {
 
             if(keywords.contains(st.get(i).toUpperCase())){
                 System.out.println("U IFUUUUUUU");
+//                if(st.get(i-1).equalsIgnoreCase("as")){
+//                    key = "SELECT";
+//                }
                 if(mapa.containsKey(st.get(i))){
                     key = st.get(i)+(++j);
                     mapa.put(key, new ArrayList<>());
                 }else{
-                    mapa.put(st.get(i), new ArrayList<>());
-                    key = st.get(i);
+                    mapa.put(st.get(i).toUpperCase(), new ArrayList<>());
+                    key = st.get(i).toUpperCase();
                 }
 
             }else {
                 String s = st.get(i);
+                if(key.equalsIgnoreCase("as") && mapa.get("AS") == null){
+                    key = "SELECT";
+                }
                 if(st.get(i).contains(",")){
                      s = st.get(i).replace(",", "");
 
                 }
+
                 mapa.get(key).add(s);
-//            if(st.get(i).equalsIgnoreCase("select") || st.get(i).equalsIgnoreCase("from")
-//                || st.get(i).equalsIgnoreCase("where")){
-//
-//                mapa.put(st.get(i), new ArrayList<>());
-//                key = st.get(i);
-//            }else{
-//                String value = st.get(i);
-//                if(st.get(i).contains("  ")) {
-//                    st.get(i).replace("  ", "");
-//                    value = st.get(i);
-//                }
-//
-//
-//                    mapa.get(key).add(value);
-
-
-
-
 
             }
         }
