@@ -24,7 +24,7 @@ public class Redosled implements Rule{
                    // System.out.println("REDOSLED");
                     if (query.get(i).equalsIgnoreCase(s.getName())) {
                      //   System.out.println("REDOSLED U IFU");
-                        if(br < s.getPriority()) {
+                        if(br <= s.getPriority()) {
                             br = s.getPriority();
                         }else{
                             System.out.println("POGRESTAN REDOSLED");

@@ -26,6 +26,7 @@ public class TabeleIKolone implements Rule{
 
 
         List<String> nazivTabele = map.get("FROM");
+        System.out.println(map.get("FROM"));
         System.out.println("NAZIV TABELE " + nazivTabele.get(0));
 
         List<DBNode> listaAtributa = null;
