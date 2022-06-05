@@ -2,6 +2,8 @@ package query;
 
 
 
+import gui.MainFrame;
+
 import query.rules.JoinOn;
 import query.rules.ObavezniDelovi;
 import query.rules.Redosled;
@@ -157,8 +159,7 @@ public class Checker {
     }
 
     public void check(String query){
-
-
+        MainFrame.getInstance().setKliknutoP(false);
         mapa.clear();
         mapa = new HashMap<>();
         System.out.println(query);
@@ -283,6 +284,24 @@ public class Checker {
                 }
 
                 mapa.get(key).add(s);
+//            if(st.get(i).equalsIgnoreCase("select") || st.get(i).equalsIgnoreCase("from")
+//                || st.get(i).equalsIgnoreCase("where")){
+//
+//                mapa.put(st.get(i), new ArrayList<>());
+//                key = st.get(i);
+//            }else{
+//                String value = st.get(i);
+//                if(st.get(i).contains("  ")) {
+//                    st.get(i).replace("  ", "");
+//                    value = st.get(i);
+//                }
+//
+//
+//                    mapa.get(key).add(value);
+
+
+
+
 
             }
         }

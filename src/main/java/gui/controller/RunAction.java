@@ -20,7 +20,12 @@ public class RunAction extends AbstractAction {
 //        String text = MainFrame.getInstance().getTextPane().getText();
 //        String formatiranText = SqlFormatter.format(text);
 
-        MainFrame.getInstance().getAppCore().run(MainFrame.getInstance().getTextPane().getText());
+        if(MainFrame.getInstance().isKliknutoP()){
+            MainFrame.getInstance().getAppCore().run(MainFrame.getInstance().getStringZaRun());
+        }
+        else{
+            MainFrame.getInstance().getAppCore().run(MainFrame.getInstance().getTextPane().getText());
+        }
 
     }
 }

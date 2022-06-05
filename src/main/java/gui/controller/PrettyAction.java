@@ -17,6 +17,7 @@ public class PrettyAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MainFrame.getInstance().getCommands().ulepsaj(MainFrame.getInstance().getTextPane());
+        MainFrame.getInstance().setStringZaRun(MainFrame.getInstance().getCommands().ulepsaj(MainFrame.getInstance().getTextPane()));
+        MainFrame.getInstance().setKliknutoP(true);
     }
 }

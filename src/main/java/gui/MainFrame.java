@@ -29,6 +29,8 @@ public class MainFrame extends JFrame implements Subscriber {
     private JToolBar toolBar;
     private ActionManager actionManager;
     private Commands commands;
+    private String stringZaRun;
+    private boolean  kliknutoP;
 
 
     private MainFrame() {
@@ -56,6 +58,8 @@ public class MainFrame extends JFrame implements Subscriber {
 
         toolBar = new Toolbar();
 
+        kliknutoP = false;
+
         right = new JPanel(new BorderLayout());
 
         textPane = new JTextPane();
@@ -74,6 +78,7 @@ public class MainFrame extends JFrame implements Subscriber {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
 
 
     }

@@ -8,8 +8,6 @@ import gui.model.TableModel;
 import tree.TreeItem;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ public class CommandsImpl implements Commands {
     List<String> keywords;
 
 
-    public void ulepsaj(JTextPane textPane){
+    public String ulepsaj(JTextPane textPane){
         keywords = new ArrayList<>();
 
         keywords = addKeyWords();
@@ -70,8 +68,7 @@ public class CommandsImpl implements Commands {
         }*/
 
 
-
-
+        return text;
     }
 
     @Override
@@ -148,6 +145,11 @@ public class CommandsImpl implements Commands {
                 sql = "INSERT INTO " + tabela + "(max_salary, job_id, min_salary, job_title) VALUES (?, ?, ?, ?)";
             else if(tabela.equals("job_history"))
                 sql = "INSERT INTO " + tabela + "(end_date, department_id, job_id, employee_id, start_date) VALUES (?, ?, ?, ?, ?)";
+            else if(tabela.equals("locations"))
+                sql = "INSERT INTO " + tabela + "(street_address, city, state_province, postal_code, location_id, country_id) VALUES (?, ?, ?, ?, ?, ?)";
+            else if(tabela.equals("regions"))
+                sql = "INSERT INTO " + tabela + "(region_id, region_name) VALUES (?, ?)";
+
 
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -235,6 +237,39 @@ public class CommandsImpl implements Commands {
                     statement.setDate(5, d_start_date);
 
                 }
+                else if(tabela.equals("regions")) {
+                    String region_id = data[0];
+                    String region_name = data[1];
+
+                    int i_region_id = Integer.valueOf(region_id);
+                    statement.setInt(1, i_region_id);
+
+                    statement.setString(2, region_name);
+
+
+                }
+                else if(tabela.equals("locations")) {
+                    String street_address = data[0];
+                    String city = data[1];
+                    String state_province = data[2];
+                    String postal_code = data[3];
+                    String location_id = data[4];
+                    String country_id = data[5];
+
+                    statement.setString(1,street_address);
+
+                    statement.setString(2,city);
+
+                    statement.setString(3,state_province);
+
+                    statement.setString(4,postal_code);
+
+                    int i_location_id = Integer.valueOf(location_id);
+                    statement.setInt(5, i_location_id);
+
+                    statement.setString(6,country_id);
+
+                }
                 else if(tabela.equals("employees")) {
                     String commission_pct = data[0];
                     String manager_id = data[1];
@@ -306,7 +341,7 @@ public class CommandsImpl implements Commands {
 
         } catch (BatchUpdateException e) {
             JOptionPane.showMessageDialog(null, "Vrednost iz CSV fajla se vec nalazi u bazi");
-            e.printStackTrace();
+            //e.printStackTrace();
         }catch (SQLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
