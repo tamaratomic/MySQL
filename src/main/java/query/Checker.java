@@ -4,10 +4,7 @@ package query;
 
 import gui.MainFrame;
 
-import query.rules.JoinOn;
-import query.rules.ObavezniDelovi;
-import query.rules.Redosled;
-import query.rules.TabeleIKolone;
+import query.rules.*;
 
 import java.util.*;
 
@@ -27,6 +24,7 @@ public class Checker {
             rules.add(new ObavezniDelovi());
             rules.add(new TabeleIKolone());
             rules.add(new JoinOn());
+            rules.add(new GroupBy());
         }
 
 
@@ -35,7 +33,9 @@ public class Checker {
             selectStatements.add(new Statement("FROM", 2));
             selectStatements.add(new Statement("JOIN", 3));
             selectStatements.add(new Statement("WHERE", 4));
-            selectStatements.add(new Statement("ORDER BY", 5));
+            selectStatements.add(new Statement("GROUP BY", 5));
+            selectStatements.add(new Statement("HAVING", 6));
+            selectStatements.add(new Statement("ORDER BY", 7));
         }
 
 
