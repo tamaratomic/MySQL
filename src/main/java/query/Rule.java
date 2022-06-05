@@ -10,7 +10,7 @@ public interface Rule {
 
 
 
-    String check(Map<String, List<String>> map,  Object object);
+    String check(List<String> query, Map<String, List<String>> map,  Object object);
 
 
 }

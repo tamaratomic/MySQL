@@ -10,7 +10,7 @@ public class ObavezniDelovi implements Rule{
 
 
     @Override
-    public String check(Map<String, List<String>> map, Object object) {
+    public String check(List<String> l, Map<String, List<String>> map, Object object) {
         return null;
     }
 }

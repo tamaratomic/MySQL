@@ -19,13 +19,14 @@ public class TabeleIKolone implements Rule{
 
 
     @Override
-    public String check(Map<String, List<String>> map, Object object) {
+    public String check(List<String> l, Map<String, List<String>> map, Object object) {
 
         TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
         List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
 
 
-        List<String> nazivTabele = map.get("from");
+        List<String> nazivTabele = map.get("FROM");
+        System.out.println("NAZIV TABELE " + nazivTabele.get(0));
 
         List<DBNode> listaAtributa = null;
 
@@ -50,9 +51,10 @@ public class TabeleIKolone implements Rule{
                 nazivi.add(node.getName());
             }
             for(String s: map.get(query)){
-                if(nazivi.contains(s)){
+                if(nazivi.contains(s) || s.contains("%") || s.contains("(") || s.contains(")")){
                     continue;
                 }else{
+
                     System.out.println("Tabela " + nazivTabele + "ne sadrzi " + s);
                 }
             }
