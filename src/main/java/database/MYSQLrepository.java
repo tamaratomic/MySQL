@@ -128,7 +128,7 @@ public class MYSQLrepository implements Repository{
     }
 
     @Override
-    public List<Row> get(String from) {
+    public List<Row> get(String from, int j) {
 
         List<Row> rows = new ArrayList<>();
 
@@ -136,8 +136,14 @@ public class MYSQLrepository implements Repository{
         try{
             this.initConnection();
 
+            String query;
+            if(j == 0){
+                query = "SELECT * FROM " + from;
+            }else {
+                query = from;
+            }
             //String query = "SELECT * FROM " + from;
-            String query = from;
+            //String query = from;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
             ResultSetMetaData resultSetMetaData = rs.getMetaData();

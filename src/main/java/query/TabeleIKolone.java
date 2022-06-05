@@ -20,6 +20,7 @@ public class TabeleIKolone implements Rule{
 
     @Override
     public String check(List<String> l, Map<String, List<String>> map, Object object) {
+        System.out.println("TABELE I KOLONE");
 
         TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
         List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
@@ -50,9 +51,10 @@ public class TabeleIKolone implements Rule{
             List<String> nazivi = new ArrayList<>();
             for(DBNode node : listaAtributa){
                 nazivi.add(node.getName());
+                System.out.println(node.getName());
             }
             for(String s: map.get(query)){
-                if(nazivi.contains(s) || s.contains("%") || s.contains("(") || s.contains(")")){
+                if(nazivi.contains(s.toLowerCase()) || s.contains("%") || s.contains("(") || s.contains(")")){
                     continue;
                 }else{
 

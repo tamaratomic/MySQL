@@ -5,7 +5,6 @@ import database.DatabaseImplementation;
 import database.MYSQLrepository;
 import database.settings.Settings;
 import database.settings.SettingsImplementation;
-import gui.MainFrame;
 import gui.model.TableModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +18,6 @@ import tree.implementation.TreeImplementation;
 import utils.Constants;
 
 import javax.swing.tree.DefaultTreeModel;
-import java.util.jar.Manifest;
 
 @Getter
 @Setter
@@ -57,9 +55,9 @@ public class AppCore extends PublisherImplementation {
         return this.tree.generateTree(ir);
     }
 
-    public void readDataFromTable(String fromTable){
+    public void readDataFromTable(String fromTable, int i){
 
-        tableModel.setRows(this.database.readDataFromTable(fromTable));
+        tableModel.setRows(this.database.readDataFromTable(fromTable, i));
 
         //Zasto ova linija moze da ostane zakomentarisana?
         this.notifySubscribers(new Notification(NotificationCode.DATA_UPDATED, this.getTableModel()));
@@ -68,7 +66,7 @@ public class AppCore extends PublisherImplementation {
 
     public void run(String query){
         checker.check(query);
-        readDataFromTable(query);
+        readDataFromTable(query, 1);
     }
 
 

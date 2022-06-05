@@ -88,6 +88,7 @@ public class Checker {
             keywords.add("FROM");
             keywords.add("FULL");
             keywords.add("GROUP");
+            keywords.add("GROUP BY");
             keywords.add("GROUPING");
             keywords.add("HAVING");
             keywords.add("IN");
@@ -111,6 +112,7 @@ public class Checker {
             keywords.add("ON");
             keywords.add("OR");
             keywords.add("ORDER");
+            keywords.add("ORDER BY");
             keywords.add("OUTER");
             keywords.add("PREPARE");
             keywords.add("RECURSIVE");
@@ -167,6 +169,23 @@ public class Checker {
                 }
 
             }
+
+            if(str[i].equalsIgnoreCase("ORDER")){
+                if(str[i+1].equalsIgnoreCase("BY")){
+                    st.add("ORDER BY");
+                    i++;
+                    continue;
+                }
+            }
+
+            if(str[i].equalsIgnoreCase("GROUP")){
+                if(str[i+1].equalsIgnoreCase("BY")){
+                    st.add("GROUP BY");
+                    i++;
+                    continue;
+                }
+            }
+
             if(str[i].length()!=1){
                 st.add(str[i].toUpperCase());
             }
@@ -175,26 +194,6 @@ public class Checker {
 
         System.out.println(st);
         List<Integer> br = new ArrayList<>();
-
-//        if(st.contains("NOT") || st.contains("not")){
-//            for(int i = 0; i < st.size(); i++){
-//                st.get(i).toUpperCase();
-//                if(st.get(i).equalsIgnoreCase("NOT") && st.get(i+1).equalsIgnoreCase("LIKE")){
-//                    br.add(i);
-//                }
-//            }
-//        }
-
-//        if(!br.isEmpty()){
-//            for(Integer i : br){
-//                System.out.println(st.get(i));
-//                st.get(i).replace("NOT", "NOT LIKE");
-//                int k = i+1;
-//                System.out.println(st.get(k));
-//                st.remove(k);
-//            }
-//        }
-       // System.out.println("i   " + st.get(br.get(0)));
 
         System.out.println(st);
 
@@ -214,10 +213,12 @@ public class Checker {
                 }
 
             }else {
+                String s = st.get(i);
                 if(st.get(i).contains(",")){
-                    st.get(i).replace(",", "");
+                     s = st.get(i).replace(",", "");
+
                 }
-                mapa.get(key).add(st.get(i));
+                mapa.get(key).add(s);
 //            if(st.get(i).equalsIgnoreCase("select") || st.get(i).equalsIgnoreCase("from")
 //                || st.get(i).equalsIgnoreCase("where")){
 //
