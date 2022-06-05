@@ -196,39 +196,54 @@ public class Checker {
 
             if(i > 0 && str[i-1].equalsIgnoreCase("as")){
 
-                String s = "";
-                if(str[i].length()>1){
+                int br = 0;
+                int i2 = i;
+                while(i2< str.length && !str[i2].contains("\"") && !str[i2].contains(",") && !keywords.contains(str[i2].toUpperCase())){
+                    if(str[i2].length()>1){
+                        br++;
+                    }
+                    i2++;
+                }
+                if(br>=1 && str[i2].contains(",")){
+                    System.out.println(str[i2]);
+                    System.out.println("Aliasi moraju biti pod navodnicima");
+                    return;
+                }else {
 
-                        while(!str[i].contains(",")) {
+                    String s = "";
+                    if (str[i].length() > 1) {
+                        int navodnici = 0;
+                        while (!str[i].contains(",")) {
                             System.out.println("WHILE " + str[i]);
-                            if(str[i].contains("\"")){
+                            if (str[i].contains("\"")) {
+                                navodnici++;
                                 s = (str[i].replace("\"", ""));
-                            }else{
-                                if(!s.equalsIgnoreCase("")) {
+                            } else {
+                                if (!s.equalsIgnoreCase("")) {
                                     s = s + " ";
                                 }
                                 s = s + (str[i]);
                             }
-                           // if (!s.equalsIgnoreCase("") && !str[i].contains("\""))
-                            if(keywords.contains(str[i+1].toUpperCase())) {
+                            // if (!s.equalsIgnoreCase("") && !str[i].contains("\""))
+                            if (keywords.contains(str[i + 1].toUpperCase())) {
                                 break;
-                            }else{
+                            } else {
                                 i++;
                             }
                         }
-                        if(str[i].contains("\"")){
+                        if (str[i].contains("\"")) {
                             s = s + " ";
                             s = s + str[i].replace("\"", "");
-                           // s.replace(",", "");
-                            if(s.contains(",")){
+                            // s.replace(",", "");
+                            if (s.contains(",")) {
                                 s = s.replace(",", "");
                             }
                         }
                         System.out.println("STRING S = " + s);
 
                         continue;
+                    }
                 }
-
 //                    if(!keywords.contains(str[i+1].toUpperCase())) {
 //                        System.out.println("ALIASI MORAJU BITI POD NAVODNICIMA");
 //                    }else {
@@ -238,7 +253,7 @@ public class Checker {
                 //continue;
 
             }
-                if(!str[i].equalsIgnoreCase("as")) {
+                if(!str[i].equalsIgnoreCase("as") && str[i].length()>1) {
                     st.add(str[i]);
                 }
 

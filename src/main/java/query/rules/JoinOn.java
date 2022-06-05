@@ -67,10 +67,11 @@ public class JoinOn implements Rule {
 
 
         for(DBNode node: listaAtributa){
+            //System.out.println("for1");
             if(node.getName().equalsIgnoreCase(straniKljuc)){
-                System.out.println("if1");
+               // System.out.println("if1");
                 for(DBNode node1: listaAtributaJoin){
-                    System.out.println("for 2");
+                   // System.out.println("for 2");
                     if(node1.getName().equalsIgnoreCase(straniKljuc)){
                         System.out.println("STRANI KLJUC");
                         break;
@@ -81,7 +82,7 @@ public class JoinOn implements Rule {
                 }
             }
             if(listaAtributa.get(listaAtributa.size()-1).equals(node)){
-                //System.out.println("NIJE STRANI KLJUC");
+                System.out.println("NIJE STRANI KLJUC");
             }
         }
 
