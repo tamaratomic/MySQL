@@ -227,17 +227,19 @@ public class Checker {
                 if(s[i].equalsIgnoreCase("JOIN")){
                     String key = "JOIN";
                     list.put(key, new ArrayList<>());
-                    int j = i+1;
+                    list.get(key).add(s[i+1]);
+                    int j = i+2;
                     while(true){
                         if(j >= s.length || s[j].equalsIgnoreCase("WHERE")){
                             break;
                         }
-                        if(s[j].equalsIgnoreCase("ON") ||s[j].equalsIgnoreCase("USING")){
+                        if(s[j].equalsIgnoreCase("ON") || s[j].equalsIgnoreCase("USING")){
                             key = s[j].toUpperCase();
                             list.put(key, new ArrayList<>());
                         }else {
                             list.get(key).add(s[j]);
                         }
+
                         j++;
                     }
                 }

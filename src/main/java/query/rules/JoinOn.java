@@ -86,11 +86,11 @@ public class JoinOn implements Rule {
 
 
             for (DBNode node : listaAtributa) {
-                //System.out.println("for1");
+                System.out.println("for1");
                 if (node.getName().equalsIgnoreCase(straniKljuc)) {
-                    // System.out.println("if1");
+                     System.out.println("if1");
                     for (DBNode node1 : listaAtributaJoin) {
-                        // System.out.println("for 2");
+                         System.out.println("for 2");
                         if (node1.getName().equalsIgnoreCase(straniKljuc)) {
                             System.out.println("STRANI KLJUC");
                             map.get("JOIN").add(nazivTabeleJoin);
