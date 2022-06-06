@@ -38,6 +38,16 @@ public class ObavezniDelovi implements Rule {
             return false;
         }
 
+        if(map.containsKey("UPDATE") && !map.containsKey("SET")){
+            JOptionPane.showMessageDialog(null, "Za UPDATE upite je obavezan SET");
+            return false;
+        }
+
+        if(map.containsKey("DELETE") && !map.containsKey("FROM")){
+            JOptionPane.showMessageDialog(null, "Za DELETE upite je obavezan FROM");
+            return false;
+        }
+
         return true;
     }
 }

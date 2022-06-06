@@ -1,5 +1,6 @@
 package database;
 
+import com.sun.source.tree.ReturnTree;
 import database.settings.Settings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -145,20 +146,27 @@ public class MYSQLrepository implements Repository{
             //String query = "SELECT * FROM " + from;
             //String query = from;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet rs = preparedStatement.executeQuery();
-            ResultSetMetaData resultSetMetaData = rs.getMetaData();
+            if(query.toUpperCase().startsWith("SELECT")) {
 
-            while (rs.next()){
 
-                Row row = new Row();
-                row.setName(from);
+                ResultSet rs = preparedStatement.executeQuery();
+                ResultSetMetaData resultSetMetaData = rs.getMetaData();
 
-                for (int i = 1; i<=resultSetMetaData.getColumnCount(); i++){
-                    row.addField(resultSetMetaData.getColumnLabel(i), rs.getString(i));
+                while (rs.next()) {
+
+                    Row row = new Row();
+                    row.setName(from);
+
+                    for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                        row.addField(resultSetMetaData.getColumnLabel(i), rs.getString(i));
+                    }
+                    rows.add(row);
+
+
                 }
-                rows.add(row);
-
-
+            }else {
+                preparedStatement.executeUpdate();
+                return null;
             }
         }
         catch (Exception e) {

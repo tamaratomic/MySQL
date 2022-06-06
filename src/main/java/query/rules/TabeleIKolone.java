@@ -20,6 +20,8 @@ public class TabeleIKolone implements Rule {
     private String name = "Kolone i tabele";
 
 
+
+
     @Override
     public boolean check(List<String> l, Map<String, List<String>> map, Object object) {
         System.out.println("TABELE I KOLONE");
@@ -27,8 +29,13 @@ public class TabeleIKolone implements Rule {
         TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
         List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
 
+        List<String> nazivTabele;
+        if(map.containsKey("INSERT")){
+             nazivTabele = map.get("INTO");
+        }else {
+            nazivTabele = map.get("FROM");
+        }
 
-        List<String> nazivTabele = map.get("FROM");
 //        System.out.println(map.get("FROM"));
 //        System.out.println("NAZIV TABELE " + nazivTabele.get(0));
 
@@ -47,7 +54,7 @@ public class TabeleIKolone implements Rule {
 
 
         for (String query: map.keySet()){
-            if(query.equalsIgnoreCase("from")){
+            if(query.equalsIgnoreCase("from") ||query.equalsIgnoreCase("INTO")){
                 //System.out.println("U IFUUUU 11111111");
                 continue;
             }
@@ -64,9 +71,13 @@ public class TabeleIKolone implements Rule {
                             || s.contains("=") || s.contains("*")|| s.contains("/")|| s.contains("%")) {
                         continue;
                     } else {
-
-                        JOptionPane.showMessageDialog(null, "Tabela " + nazivTabele + " ne sadrzi " + s);
-                        return false;
+                        try {
+                            int i1 = Integer.parseInt(s);
+                            System.out.println(i1);
+                        }catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Tabela " + nazivTabele + " ne sadrzi " + s);
+                            return false;
+                        }
                     }
                 }
             }

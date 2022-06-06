@@ -65,7 +65,7 @@ public class AppCore extends PublisherImplementation {
 
 
     public void run(String query){
-        if(checker.check(query)){
+        if(checker.che(query)){
             readDataFromTable(query, 1);
         }
     }

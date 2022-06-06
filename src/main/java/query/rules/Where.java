@@ -24,13 +24,18 @@ public class Where implements Rule {
                     int i2 = i+1;
                     while(i2 < query.size()  && !map.containsKey(query.get(i2).toUpperCase())){
                         String s = query.get(i2).toUpperCase();
-                        System.out.println("U WHILE");
-                        if(s.contains("SUM") || s.contains("COUNT") || s.contains("AVG")
-                                || s.contains("MIN") || s.contains("MAX")){
-                            JOptionPane.showMessageDialog(null, "WHERE NE SME DA SADRZI FUNKCIJU AGREGACIJE");
+                            System.out.println("U WHILE");
+                            if((s.contains("SUM") || s.contains("COUNT") || s.contains("AVG")
+                                    || s.contains("MIN") || s.contains("MAX")) && !s.equalsIgnoreCase("MAX_SALARY")
+                                    && !s.equalsIgnoreCase("MIN_SALARY")){
 
-                            return false;
-                        }
+                                JOptionPane.showMessageDialog(null, "WHERE NE SME DA SADRZI FUNKCIJU AGREGACIJE");
+
+                                return false;
+                            }
+
+
+
                         i2++;
                     }
                 }

@@ -23,13 +23,14 @@ public class Checker {
 
     public Checker() {
         if(rules.isEmpty()){
-            rules.add(new Redosled());
+            rules.add(new ObavezniDeo());
             rules.add(new ObavezniDelovi());
+            rules.add(new Redosled());
             rules.add(new JoinOn());
             rules.add(new Where());
             rules.add(new GroupBy());
             rules.add(new TabeleIKolone());
-            rules.add(new BI_Csv());
+        //    rules.add(new BI_Csv());
         }
 
 
@@ -162,6 +163,31 @@ public class Checker {
 
 
     }
+
+    public boolean che(String query){
+        ispravnost.clear();
+        mapa.clear();
+
+        String[] s = query.split(" ");
+        List<String> keys = new ArrayList<>();
+        for(String st: s){
+            if(keywords.contains(st.toUpperCase())){
+                keys.add(st.toUpperCase());
+            }
+        }
+
+        ispravnost.add(rules.get(0).check(keys, mapa, null));
+
+        if(ispravnost.contains(false)){
+            return false;
+        }else {
+            return true;
+        }
+
+
+
+    }
+
 
     public boolean check(String query){
         MainFrame.getInstance().setKliknutoP(false);
