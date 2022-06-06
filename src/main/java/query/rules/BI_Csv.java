@@ -44,9 +44,11 @@ public class BI_Csv implements Rule {
 
                 if (tabela.equals("countries")) {
 
-                    if(data.length != 3)
+
+                    if(data.length != 3) {
                         JOptionPane.showMessageDialog(null, "Prosledjeni broj kolona nije odovarajuci za tabelu " + tabela);
-                       // return false;
+                        return false;
+                    }
                     String country_name = data[0];
                     String region_id = data[1];
                     String country_id = data[2];
@@ -199,7 +201,8 @@ public class BI_Csv implements Rule {
 
                     if(data.length != 5)
                         JOptionPane.showMessageDialog(null, "Prosledjeni broj kolona nije odovarajuci za tabelu " + tabela);
-//return false;
+                        //return false;
+
                     String end_date = data[0];
                     String department_id = data[1];
                     String job_id = data[2];
