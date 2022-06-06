@@ -312,6 +312,45 @@ public class Checker {
 
 
 
+        if(keys.contains("WHERE")){
+            mapa.put("WHERE", new ArrayList<>());
+            List<String> list = new ArrayList<>();
+            for(int i = 0; i < s.length; i++) {
+                if (s[i].equalsIgnoreCase("WHERE")) {
+                    int j = i + 1;
+                    while (true) {
+                        if (j >= s.length || keys.contains(s[j].toUpperCase())) {
+                            if(s[j].equalsIgnoreCase("IN")){
+                                mapa.put("IN", new ArrayList<>());
+                                List<String> list1 = new ArrayList<>();
+                                int m = j+1;
+                                while(true){
+                                    if(m >= s.length || keys.contains(s[m])){
+                                        break;
+                                    }
+                                    list1.add(s[m]);
+                                    m++;
+                                }
+                                if(!list1.get(0).startsWith("(") && !list1.get(list1.size()-1).endsWith(")")){
+                                    JOptionPane.showMessageDialog(null, "Neispravni argumenti u IN-u");
+                                    ispravnost.add(false);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        list.add(s[j]);
+                        j++;
+                    }
+                }
+
+            }
+            List<String> from = new ArrayList<>();
+            from.add("WHERE");
+            ispravnost.add(rules.get(4).check(from, mapa, list));
+            ispravnost.add(rules.get(3).check(from, mapa, list));
+        }
+
 
 
 

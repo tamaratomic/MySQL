@@ -79,11 +79,72 @@ public class TabeleKolone implements Rule {
                    JOptionPane.showMessageDialog(null, "Kolona " + str + " ne postoji.");
                    return false;
                }
+               map.get("SELECT").add(str);
            }
 
 
 
         }
+
+        if(tabel.get(0).equalsIgnoreCase("WHERE")){
+            List<String> kolone = (List<String>) object;
+
+
+            TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
+            List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
+
+            List<DBNode> listaAtributa = new ArrayList<>();
+
+
+            for(DBNode node : list){
+                if(node.getName().equalsIgnoreCase(map.get("FROM").get(0))) {
+                    listaAtributa = ((DBNodeComposite) node).getChildren();
+                    break;
+                }
+            }
+
+            List<String> naziviAtributa = new ArrayList<>();
+            for(DBNode node:listaAtributa){
+                naziviAtributa.add(node.getName());
+            }
+
+            for(String s : kolone){
+                if(s.contains("=")){
+
+                }else {
+
+                    if (s.contains(".")){
+                        String[] str = s.split(".");
+                        if(!naziviAtributa.contains(str[1])){
+                            JOptionPane.showMessageDialog(null, "Kolona " + str[1] + " ne postoji.");
+                            return false;
+                        }
+                       // continue;
+                    }
+
+
+                    try{
+                        int i = Integer.valueOf(s);
+                    }catch (Exception e){
+                        if(s.startsWith("'") && s.endsWith("'")){
+
+                        }else {
+                            if (!naziviAtributa.contains(s)) {
+                                JOptionPane.showMessageDialog(null, "Kolona " + s + " ne postoji.");
+                                return false;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+        }
+
+
+
+
         return true;
     }
 }
