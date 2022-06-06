@@ -24,8 +24,8 @@ public class Checker {
     public Checker() {
         if(rules.isEmpty()){
             rules.add(new ObavezniDeo());
-            rules.add(new ObavezniDelovi());
             rules.add(new Redosled());
+            //rules.add(new ObavezniDelovi());
             rules.add(new JoinOn());
             rules.add(new Where());
             rules.add(new GroupBy());
@@ -164,210 +164,234 @@ public class Checker {
 
     }
 
-    public boolean che(String query){
+    public boolean che(String query) {
         ispravnost.clear();
         mapa.clear();
 
         String[] s = query.split(" ");
         List<String> keys = new ArrayList<>();
-        for(String st: s){
-            if(keywords.contains(st.toUpperCase())){
+        for (String st : s) {
+            if (keywords.contains(st.toUpperCase())) {
                 keys.add(st.toUpperCase());
             }
         }
 
         ispravnost.add(rules.get(0).check(keys, mapa, null));
+        if (keys.get(0).equalsIgnoreCase("SELECT")) {
+            ispravnost.add(rules.get(1).check(keys, mapa, selectStatements));
+        } else {
+            if (keys.get(0).equalsIgnoreCase("INSERT")) {
+                ispravnost.add(rules.get(1).check(keys, mapa, insertStatements));
+            } else {
+                if (keys.get(0).equalsIgnoreCase("DELETE")) {
+                    ispravnost.add(rules.get(1).check(keys, mapa, deleteStatements));
+                } else {
+                    if (keys.get(0).equalsIgnoreCase("UPDATE")) {
+                        ispravnost.add(rules.get(1).check(keys, mapa, updateStatements));
+                    } else {
+                        JOptionPane.showMessageDialog(null, keys.get(0) + " je neispravna vrednost.");
+                        ispravnost.add(false);
 
-        if(ispravnost.contains(false)){
-            return false;
-        }else {
-            return true;
+                    }
+
+
+                }
+            }
         }
 
 
 
-    }
 
-
-    public boolean check(String query){
-        MainFrame.getInstance().setKliknutoP(false);
-        mapa.clear();
-        mapa = new HashMap<>();
-        System.out.println(query);
-        String[] str = query.split(" ");
-        List<String> st = new ArrayList<>();
-        System.out.println(str[0]);
-        System.out.println(str[str.length-1]);
-        for(int i = 0; i < str.length;i++){
-
-            if(str[i].equalsIgnoreCase("NOT") || str[i].equalsIgnoreCase("not")){
-                if(str[i+1].equalsIgnoreCase("LIKE")){
-                    st.add("NOT LIKE");
-                    i++;
-                    continue;
+                if (ispravnost.contains(false)) {
+                    return false;
+                } else {
+                    return true;
                 }
 
-            }
-
-            if(str[i].equalsIgnoreCase("ORDER")){
-                if(str[i+1].equalsIgnoreCase("BY")){
-                    st.add("ORDER BY");
-                    i++;
-                    continue;
-                }
-            }
-
-            if(str[i].equalsIgnoreCase("GROUP")){
-                if(str[i+1].equalsIgnoreCase("BY")){
-                    st.add("GROUP BY");
-                    i++;
-                    continue;
-                }
-            }
-
-            if(i > 0 && str[i].equalsIgnoreCase("as")){
-                i++;
-                while(!keywords.contains(str[i])){
-                    if(str[i].contains(",")){
-                        aliasi.add(str[i].replace(",", ""));
-                        break;
-                    }
-                }
-
-                aliasi.add(str[i]);
-
-
-
-                int br = 0;
-                int i2 = i;
-                while(i2< str.length && !str[i2].contains("\"") && !str[i2].contains(",") && !keywords.contains(str[i2].toUpperCase())){
-                    if(str[i2].length()>1){
-                        br++;
-                    }
-                    i2++;
-                }
-                if(br>=1 && str[i2].contains(",")){
-                    System.out.println(str[i2]);
-                    System.out.println("Aliasi moraju biti pod navodnicima");
-                    //return;
-                }else {
-
-                    String s = "";
-                    if (str[i].length() > 1) {
-                        int navodnici = 0;
-                        while (!str[i].contains(",")) {
-                            System.out.println("WHILE " + str[i]);
-                            if (str[i].contains("\"")) {
-                                navodnici++;
-                                s = (str[i].replace("\"", ""));
-                            } else {
-                                if (!s.equalsIgnoreCase("")) {
-                                    s = s + " ";
-                                }
-                                s = s + (str[i]);
-                            }
-                            // if (!s.equalsIgnoreCase("") && !str[i].contains("\""))
-                            if (keywords.contains(str[i + 1].toUpperCase())) {
-                                break;
-                            } else {
-                                i++;
-                            }
-                        }
-                        if (str[i].contains("\"")) {
-                            s = s + " ";
-                            s = s + str[i].replace("\"", "");
-                            // s.replace(",", "");
-                            if (s.contains(",")) {
-                                s = s.replace(",", "");
-                            }
-                        }
-                        System.out.println("STRING S = " + s);
-
-                        continue;
-                    }
-                }
-
-            }
-                if(!str[i].equalsIgnoreCase("as") && str[i].length()>1) {
-                    st.add(str[i]);
-                }
 
 
         }
 
-        System.out.println(st);
-        List<Integer> br = new ArrayList<>();
-
-        System.out.println(st);
-
-        int j = 1;
-        String key = "";
-        for(int i = 0; i < st.size(); i++){
-            System.out.println(st.get(i));
-
-            if(keywords.contains(st.get(i).toUpperCase())){
-                System.out.println("U IFUUUUUUU");
-
-                if(mapa.containsKey(st.get(i))){
-                    key = st.get(i)+(++j);
-                    mapa.put(key, new ArrayList<>());
-                }else{
-                    mapa.put(st.get(i).toUpperCase(), new ArrayList<>());
-                    key = st.get(i).toUpperCase();
-                }
-
-            }else {
-                String s = st.get(i);
-                if(key.equalsIgnoreCase("as") && mapa.get("AS") == null){
-                    key = "SELECT";
-                }
-                if(st.get(i).contains(",")){
-                     s = st.get(i).replace(",", "");
-
-                }
-
-                mapa.get(key).add(s);
-
-
-
-            }
+//    public boolean check(String query){
+//        MainFrame.getInstance().setKliknutoP(false);
+//        mapa.clear();
+//        mapa = new HashMap<>();
+//        System.out.println(query);
+//        String[] str = query.split(" ");
+//        List<String> st = new ArrayList<>();
+//        System.out.println(str[0]);
+//        System.out.println(str[str.length-1]);
+//        for(int i = 0; i < str.length;i++){
+//
+//            if(str[i].equalsIgnoreCase("NOT") || str[i].equalsIgnoreCase("not")){
+//                if(str[i+1].equalsIgnoreCase("LIKE")){
+//                    st.add("NOT LIKE");
+//                    i++;
+//                    continue;
+//                }
+//
+//            }
+//
+//            if(str[i].equalsIgnoreCase("ORDER")){
+//                if(str[i+1].equalsIgnoreCase("BY")){
+//                    st.add("ORDER BY");
+//                    i++;
+//                    continue;
+//                }
+//            }
+//
+//            if(str[i].equalsIgnoreCase("GROUP")){
+//                if(str[i+1].equalsIgnoreCase("BY")){
+//                    st.add("GROUP BY");
+//                    i++;
+//                    continue;
+//                }
+//            }
+//
+//            if(i > 0 && str[i].equalsIgnoreCase("as")){
+//                i++;
+//                while(!keywords.contains(str[i])){
+//                    if(str[i].contains(",")){
+//                        aliasi.add(str[i].replace(",", ""));
+//                        break;
+//                    }
+//                }
+//
+//                aliasi.add(str[i]);
+//
+//
+//
+//                int br = 0;
+//                int i2 = i;
+//                while(i2< str.length && !str[i2].contains("\"") && !str[i2].contains(",") && !keywords.contains(str[i2].toUpperCase())){
+//                    if(str[i2].length()>1){
+//                        br++;
+//                    }
+//                    i2++;
+//                }
+//                if(br>=1 && str[i2].contains(",")){
+//                    System.out.println(str[i2]);
+//                    System.out.println("Aliasi moraju biti pod navodnicima");
+//                    //return;
+//                }else {
+//
+//                    String s = "";
+//                    if (str[i].length() > 1) {
+//                        int navodnici = 0;
+//                        while (!str[i].contains(",")) {
+//                            System.out.println("WHILE " + str[i]);
+//                            if (str[i].contains("\"")) {
+//                                navodnici++;
+//                                s = (str[i].replace("\"", ""));
+//                            } else {
+//                                if (!s.equalsIgnoreCase("")) {
+//                                    s = s + " ";
+//                                }
+//                                s = s + (str[i]);
+//                            }
+//                            // if (!s.equalsIgnoreCase("") && !str[i].contains("\""))
+//                            if (keywords.contains(str[i + 1].toUpperCase())) {
+//                                break;
+//                            } else {
+//                                i++;
+//                            }
+//                        }
+//                        if (str[i].contains("\"")) {
+//                            s = s + " ";
+//                            s = s + str[i].replace("\"", "");
+//                            // s.replace(",", "");
+//                            if (s.contains(",")) {
+//                                s = s.replace(",", "");
+//                            }
+//                        }
+//                        System.out.println("STRING S = " + s);
+//
+//                        continue;
+//                    }
+//                }
+//
+//            }
+//                if(!str[i].equalsIgnoreCase("as") && str[i].length()>1) {
+//                    st.add(str[i]);
+//                }
+//
+//
+//        }
+//
+//        System.out.println(st);
+//        List<Integer> br = new ArrayList<>();
+//
+//        System.out.println(st);
+//
+//        int j = 1;
+//        String key = "";
+//        for(int i = 0; i < st.size(); i++){
+//            System.out.println(st.get(i));
+//
+//            if(keywords.contains(st.get(i).toUpperCase())){
+//                System.out.println("U IFUUUUUUU");
+//
+//                if(mapa.containsKey(st.get(i))){
+//                    key = st.get(i)+(++j);
+//                    mapa.put(key, new ArrayList<>());
+//                }else{
+//                    mapa.put(st.get(i).toUpperCase(), new ArrayList<>());
+//                    key = st.get(i).toUpperCase();
+//                }
+//
+//            }else {
+//                String s = st.get(i);
+//                if(key.equalsIgnoreCase("as") && mapa.get("AS") == null){
+//                    key = "SELECT";
+//                }
+//                if(st.get(i).contains(",")){
+//                     s = st.get(i).replace(",", "");
+//
+//                }
+//
+//                mapa.get(key).add(s);
+//
+//
+//
+//            }
+//        }
+//
+//        System.out.println(mapa);
+//
+//
+//        if(mapa.containsKey("SELECT")){
+//            System.out.println("SELECT");
+//            for (Rule r:rules){
+//               ispravnost.add(r.check(st, mapa, selectStatements));
+//            }
+//        }else {
+//            if(mapa.containsKey("INSERT")){
+//                for (Rule r:rules){
+//                    ispravnost.add(r.check(st, mapa, insertStatements));
+//                }
+//            }else{
+//                if(mapa.containsKey("DELETE")){
+//                    for (Rule r:rules){
+//                        ispravnost.add(r.check(st, mapa, deleteStatements));
+//                    }
+//                }else {
+//                    if(mapa.containsKey("UPDATE")){
+//                        for (Rule r:rules){
+//                            ispravnost.add(r.check(st, mapa, updateStatements));
+//                        }
+//                    }else{
+//                        JOptionPane.showMessageDialog(null, st.get(0) + " neispravna rec.");
+//                    }
+//                }
+//            }
+//        }
+//
+//        if(ispravnost.contains(false)){
+//            return false;
+//        }else {
+//            return true;
+//        }
+//
+//    }
         }
 
-        System.out.println(mapa);
-
-
-        if(mapa.containsKey("SELECT")){
-            System.out.println("SELECT");
-            for (Rule r:rules){
-               ispravnost.add(r.check(st, mapa, selectStatements));
-            }
-        }else {
-            if(mapa.containsKey("INSERT")){
-                for (Rule r:rules){
-                    ispravnost.add(r.check(st, mapa, insertStatements));
-                }
-            }else{
-                if(mapa.containsKey("DELETE")){
-                    for (Rule r:rules){
-                        ispravnost.add(r.check(st, mapa, deleteStatements));
-                    }
-                }else {
-                    if(mapa.containsKey("UPDATE")){
-                        for (Rule r:rules){
-                            ispravnost.add(r.check(st, mapa, updateStatements));
-                        }
-                    }else{
-                        JOptionPane.showMessageDialog(null, st.get(0) + " neispravna rec.");
-                    }
-                }
-            }
-        }
-
-        if(ispravnost.contains(false)){
-            return false;
-        }else {
-            return true;
-        }
-
-    }
-}
