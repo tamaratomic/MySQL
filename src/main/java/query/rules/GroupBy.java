@@ -24,13 +24,10 @@ public class GroupBy implements Rule {
                     String st = s.toUpperCase();
                     //COUNT, AVG,
                     //MIN, MAX i SUM.
-                    if (st.contains("SUM") || st.contains("COUNT") || st.contains("AVG")
-                            || st.contains("MIN") || st.contains("MAX")) {
-                        if (!map.containsKey("GROUP BY")) {
-                            JOptionPane.showMessageDialog(null, "POTREBAN GROUP BY");
+                    if (st.contains("SUM(") || st.contains("COUNT(") || st.contains("AVG(")
+                            || st.contains("MIN(") || st.contains("MAX(")) {
 
-                            return false;
-                        }
+
                     }
                 }
             }

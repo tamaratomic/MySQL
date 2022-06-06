@@ -30,7 +30,6 @@ public class Checker {
             rules.add(new TabeleKolone());
             rules.add(new Where());
             rules.add(new GroupBy());
-            rules.add(new TabeleIKolone());
         //    rules.add(new BI_Csv());
         }
 
@@ -185,7 +184,7 @@ public class Checker {
                 if(s[i].equalsIgnoreCase("FROM")){
                     int j = i+1;
                     while(true){
-                        if(j >= s.length || s[j].equalsIgnoreCase("JOIN")){
+                        if(j >= s.length || keys.contains(s[j].toUpperCase())){
                             break;
                         }
                         l.add(s[j]);
@@ -244,6 +243,76 @@ public class Checker {
 
             ispravnost.add(rules.get(2).check(keys, mapa, list));
         }
+
+
+        //aliasi i vrednosti u select
+        if(mapa.containsKey("SELECT")){
+
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("SELECT")){
+                    int j = i+1;
+                    while(true){
+                        System.out.println(s[j]);
+                        if(j >= s.length || (keys.contains(s[j].toUpperCase())&&!s[j].equalsIgnoreCase("as"))){
+                            break;
+                        }
+                        if(s[j].equalsIgnoreCase("AS")){
+                            System.out.println("if as");
+                            int k = j+1;
+                            List<String> aliasi = new ArrayList<>();
+                            while(true){
+                                System.out.println("while2");
+                                if(k >= s.length || keys.contains(s[k].toUpperCase())) {
+                                    break;
+                                }
+                                if(s[k].contains(",")){
+                                    aliasi.add(s[k].replace(",", ""));
+                                    break;
+                                }
+                                aliasi.add(s[k]);
+                                System.out.println(s[k]);
+                                k++;
+                            }
+                            System.out.println("van while");
+                            if(aliasi.size()>1){
+                                System.out.println("provera aliasa");
+                                if(!aliasi.get(0).startsWith("\"") || !aliasi.get(aliasi.size()-1).endsWith("\"")){
+                                    JOptionPane.showMessageDialog(null, "Aliasi moraju biti pod navodnicima");
+                                    ispravnost.add(false);
+                                    break;
+                                }
+                            }
+                            if(aliasi.size()==1){
+                                if((aliasi.get(0).startsWith("\"") && !aliasi.get(0).endsWith("\""))
+                                || (!aliasi.get(0).startsWith("\"") && aliasi.get(0).endsWith("\""))){
+                                    JOptionPane.showMessageDialog(null, "Neispravan alias " + aliasi.get(0));
+                                    ispravnost.add(false);
+                                    break;
+                                }
+                            }
+                            j = k;
+                        }else {
+                            l.add(s[j]);
+                        }
+                        if(s[j].equalsIgnoreCase("FROM")){
+                            break;
+                        }
+                        j++;
+                    }
+                    i = j;
+                }
+            }
+            List<String> from = new ArrayList<>();
+            from.add("SELECT");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
+
+
+        }
+
+
+
+
 
 
                 if (ispravnost.contains(false)) {
