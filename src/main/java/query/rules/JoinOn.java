@@ -93,6 +93,7 @@ public class JoinOn implements Rule {
                         // System.out.println("for 2");
                         if (node1.getName().equalsIgnoreCase(straniKljuc)) {
                             System.out.println("STRANI KLJUC");
+                            map.get("JOIN").add(nazivTabeleJoin);
                             return true;
                         }
                         if (listaAtributaJoin.get(listaAtributaJoin.size() - 1).equals(node1)) {

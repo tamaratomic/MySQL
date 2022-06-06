@@ -247,7 +247,7 @@ public class Checker {
 
         //aliasi i vrednosti u select
         if(mapa.containsKey("SELECT")){
-
+            System.out.println("CHECKER");
             List<String> l = new ArrayList<>();
             for(int i = 0; i < s.length; i++){
                 if(s[i].equalsIgnoreCase("SELECT")){
@@ -293,7 +293,7 @@ public class Checker {
                             }
                             j = k;
                         }else {
-                            l.add(s[j]);
+                            l.add(s[j].replace(",", ""));
                         }
                         if(s[j].equalsIgnoreCase("FROM")){
                             break;
@@ -320,6 +320,9 @@ public class Checker {
                     int j = i + 1;
                     while (true) {
                         if (j >= s.length || keys.contains(s[j].toUpperCase())) {
+                            if(j>=s.length ) {
+                                break;
+                            }
                             if(s[j].equalsIgnoreCase("IN")){
                                 mapa.put("IN", new ArrayList<>());
                                 List<String> list1 = new ArrayList<>();
@@ -337,7 +340,7 @@ public class Checker {
                                     break;
                                 }
                             }
-                            break;
+
                         }
                         list.add(s[j]);
                         j++;
@@ -349,12 +352,41 @@ public class Checker {
             from.add("WHERE");
             ispravnost.add(rules.get(4).check(from, mapa, list));
             ispravnost.add(rules.get(3).check(from, mapa, list));
+         }
+
+
+        if(keys.contains("GROUP")){
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("GROUP")){
+                    int j = i+2;
+                    while(true){
+                        if(j >= s.length || keys.contains(s[j].toUpperCase())){
+                            break;
+                        }
+                        if(s[j].contains(",")){
+                            l.add(s[j].replace(",", ""));
+                        }else {
+                            l.add(s[j]);
+                        }
+                        j++;
+                    }
+                }
+            }
+
+            ispravnost.add(rules.get(5).check(mapa.get("SELECT"), mapa, l));
+            List<String> from = new ArrayList<>();
+            from.add("GROUP");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
+
         }
 
 
 
 
-                if (ispravnost.contains(false)) {
+
+
+            if (ispravnost.contains(false)) {
                     return false;
                 } else {
                     return true;

@@ -14,26 +14,26 @@ public class GroupBy implements Rule {
 
 
     @Override
-    public boolean check(List<String> query, Map<String, List<String>> map, Object object) {
+    public boolean check(List<String> select, Map<String, List<String>> map, Object object) {
 
         System.out.println("GROUP BY");
-        if(map.containsKey("GROUP BY")) {
 
-            if (map.get("SELECT").size() > 1) {
-                for (String s : map.get("SELECT")) {
+            if (select.size() > 1) {
+                for (String s : select) {
                     String st = s.toUpperCase();
                     //COUNT, AVG,
                     //MIN, MAX i SUM.
                     if (st.contains("SUM(") || st.contains("COUNT(") || st.contains("AVG(")
                             || st.contains("MIN(") || st.contains("MAX(")) {
-
+                            return true;
 
                     }
                 }
+                return false;
             }
 
 
-        }
+
         return true;
     }
 }

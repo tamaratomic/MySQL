@@ -34,13 +34,7 @@ public class ObavezniDeo implements Rule {
                 map.put("SET", new ArrayList<>());
             }
         }
-        if(key.contains("UPDATE")){
-            map.put("UPDATE", new ArrayList<>());
-            if(!key.contains("SET")) {
-                JOptionPane.showMessageDialog(null, "Za UPDATE upite je obavezan SET");
-                return false;
-            }
-        }
+
         if(key.contains("DELETE")){
             map.put("DELETE", new ArrayList<>());
             if(!key.contains("FROM")) {

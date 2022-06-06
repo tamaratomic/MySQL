@@ -1,5 +1,6 @@
 package query.rules;
 
+import com.mysql.cj.conf.PropertyDefinitions;
 import gui.MainFrame;
 import query.Rule;
 import resource.DBNode;
@@ -8,12 +9,14 @@ import tree.TreeItem;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class TabeleKolone implements Rule {
     @Override
     public boolean check(List<String> tabel, Map<String, List<String>> map, Object object) {
+        System.out.println("Tabele i kolone");
 
         String tabela = "";
         List<String> nazivi = new ArrayList<>();
@@ -75,9 +78,45 @@ public class TabeleKolone implements Rule {
                    String[] c = s.split("[-+*%/]");
                    str = c[0];
                }
-               if(!naziviAtributa.contains(str)){
-                   JOptionPane.showMessageDialog(null, "Kolona " + str + " ne postoji.");
-                   return false;
+                String st = s.toUpperCase();
+               if (st.startsWith("SUM(") || st.startsWith("COUNT(") || st.startsWith("AVG(")
+                       || st.startsWith("MIN(") || st.startsWith("MAX(")) {
+                        if(!st.endsWith(")")){
+                            JOptionPane.showMessageDialog(null, "Sintaksna greska kod  " + st);
+                            return false;
+                        }
+                        String[] s1 = st.split("\\(");
+                        String s2 = s1[1].replace(")", "");
+                        if(!naziviAtributa.contains(s2.toLowerCase())){
+                            JOptionPane.showMessageDialog(null, "Kolona " + s2 + " ne postoji.");
+                            return false;
+                        }
+
+               }else {
+
+                   if (!naziviAtributa.contains(str)) {
+                       if(map.containsKey("JOIN")){
+                           List<DBNode> listaJoinNaziva = new ArrayList<>();
+                           for(DBNode node : list){
+                               if(node.getName().equalsIgnoreCase(map.get("JOIN").get(0))) {
+                                   listaJoinNaziva = ((DBNodeComposite) node).getChildren();
+                                   break;
+                               }
+                           }
+                           for(DBNode node: listaJoinNaziva){
+                               if(node.getName().equalsIgnoreCase(str)){
+                                   break;
+                               }
+                               if(node.getName().equalsIgnoreCase(listaJoinNaziva.get(listaJoinNaziva.size()-1).getName())){
+                                   JOptionPane.showMessageDialog(null, "Kolona " + str + " ne postoji.");
+                                   return false;
+                               }
+                           }
+                       }else {
+                           JOptionPane.showMessageDialog(null, "Kolona " + str + " ne postoji.");
+                           return false;
+                       }
+                   }
                }
                map.get("SELECT").add(str);
            }
@@ -109,32 +148,28 @@ public class TabeleKolone implements Rule {
             }
 
             for(String s : kolone){
-                if(s.contains("=")){
+                if(s.contains("=") || s.contains(">") || s.contains("<")){
 
                 }else {
 
-                    if (s.contains(".")){
-                        String[] str = s.split(".");
-                        if(!naziviAtributa.contains(str[1])){
-                            JOptionPane.showMessageDialog(null, "Kolona " + str[1] + " ne postoji.");
-                            return false;
-                        }
-                       // continue;
-                    }
-
-
-                    try{
+                    try {
                         int i = Integer.valueOf(s);
-                    }catch (Exception e){
-                        if(s.startsWith("'") && s.endsWith("'")){
+                    } catch (Exception e) {
+                        try {
+                        float f = Float.valueOf(s);
+                    } catch (Exception ex) {
 
-                        }else {
+
+                        if (s.startsWith("'") && s.endsWith("'")) {
+
+                        } else {
                             if (!naziviAtributa.contains(s)) {
                                 JOptionPane.showMessageDialog(null, "Kolona " + s + " ne postoji.");
                                 return false;
                             }
                         }
                     }
+                }
 
                 }
             }
@@ -143,9 +178,39 @@ public class TabeleKolone implements Rule {
         }
 
 
+        if(tabel.get(0).equalsIgnoreCase("GROUP")) {
+            List<String> kolone = (List<String>) object;
 
 
-        return true;
+            TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
+            List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
+
+            List<DBNode> listaAtributa = new ArrayList<>();
+
+
+            for (DBNode node : list) {
+                if (node.getName().equalsIgnoreCase(map.get("FROM").get(0))) {
+                    listaAtributa = ((DBNodeComposite) node).getChildren();
+                    break;
+                }
+            }
+
+            List<String> naziviAtributa = new ArrayList<>();
+            for (DBNode node : listaAtributa) {
+                naziviAtributa.add(node.getName());
+            }
+
+
+            for(String s : kolone){
+                if(!naziviAtributa.contains(s)){
+                    JOptionPane.showMessageDialog(null, "Argument " + s + " nije ispravan.");
+                    return false;
+                }
+            }
+
+        }
+
+            return true;
     }
 }
 
