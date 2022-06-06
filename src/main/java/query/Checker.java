@@ -29,7 +29,7 @@ public class Checker {
             rules.add(new Where());
             rules.add(new GroupBy());
             rules.add(new TabeleIKolone());
-            rules.add(new BI_Csv());
+
         }
 
 

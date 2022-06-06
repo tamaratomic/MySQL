@@ -5,6 +5,7 @@ package gui.view;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import gui.Commands;
 import gui.model.TableModel;
+import query.rules.BI_Csv;
 import tree.TreeItem;
 
 import javax.swing.*;
@@ -123,6 +124,9 @@ public class CommandsImpl implements Commands {
 
         String username = "bp_tim24";
         String password = "mmhmUUnS";
+
+
+        new BI_Csv().check(null,null,null);
 
         String csvFilePath = "./"+tabela+".csv";
 
