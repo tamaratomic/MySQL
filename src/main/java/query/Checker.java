@@ -179,22 +179,6 @@ public class Checker {
         ispravnost.add(rules.get(0).check(keys, mapa, null));
         if (keys.get(0).equalsIgnoreCase("SELECT")) {
             ispravnost.add(rules.get(1).check(keys, mapa, selectStatements));
-            List<String> l = new ArrayList<>();
-            for(int i = 0; i < s.length; i++){
-                if(s[i].equalsIgnoreCase("FROM")){
-                    int j = i+1;
-                    while(true){
-                        if(j >= s.length || keys.contains(s[j].toUpperCase())){
-                            break;
-                        }
-                        l.add(s[j]);
-                        j++;
-                    }
-                }
-            }
-            List<String> from = new ArrayList<>();
-            from.add("FROM");
-            ispravnost.add(rules.get(3).check(from, mapa, l));
         } else {
             if (keys.get(0).equalsIgnoreCase("INSERT")) {
                 ispravnost.add(rules.get(1).check(keys, mapa, insertStatements));
@@ -216,6 +200,24 @@ public class Checker {
         }
 
 
+        if(keys.contains("SELECT") || keys.contains("DELETE")){
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("FROM")){
+                    int j = i+1;
+                    while(true){
+                        if(j >= s.length || keys.contains(s[j].toUpperCase())){
+                            break;
+                        }
+                        l.add(s[j]);
+                        j++;
+                    }
+                }
+            }
+            List<String> from = new ArrayList<>();
+            from.add("FROM");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
+        }
 
 
         if(keys.contains("JOIN")){
@@ -382,6 +384,42 @@ public class Checker {
         }
 
 
+        if(keys.contains("INSERT")){
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("INTO")){
+                    List<String> from = new ArrayList<>();
+                    from.add("TABELA");
+                    ispravnost.add(rules.get(3).check(from, mapa, s[i+1]));
+                    mapa.get("INSERT INTO").add(s[i+1]);
+                    int j = i+2;
+                    while(true){
+                        if(j >= s.length || keys.contains(s[j].toUpperCase())){
+                            break;
+                        }
+                        String st = s[j];
+                        if(s[j].contains(",")){
+                            st = s[j].replace(",", "");
+                        }
+                        if(st.contains("(")){
+                            st = st.replace("(", "");
+                        }
+                        if(st.contains(")")){
+                            st = st.replace(")", "");
+                        }
+                        l.add(st);
+
+                        j++;
+                    }
+                }
+            }
+
+            List<String> from = new ArrayList<>();
+            from.add("INSERT");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
+
+
+        }
 
 
 

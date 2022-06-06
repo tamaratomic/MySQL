@@ -21,7 +21,7 @@ public class TabeleKolone implements Rule {
         String tabela = "";
         List<String> nazivi = new ArrayList<>();
 
-        if(tabel.size() == 1){
+
             if(tabel.get(0).equalsIgnoreCase("FROM")){
 
                 List<String> listFrom = (List<String>) object;
@@ -42,7 +42,7 @@ public class TabeleKolone implements Rule {
                 }
             }
 
-        }
+
         if(tabel.get(0).equalsIgnoreCase("SELECT")) {
             List<String> kolone = (List<String>) object;
 
@@ -210,6 +210,58 @@ public class TabeleKolone implements Rule {
 
         }
 
+        if(tabel.get(0).equalsIgnoreCase("TABELA")) {
+
+
+
+            TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
+            List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
+
+            List<DBNode> listaAtributa = new ArrayList<>();
+
+
+            for (DBNode node : list) {
+                if (node.getName().equalsIgnoreCase((String) object)) {
+                    return true;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Argument " + ((String) object) + " nije ispravan.");
+            return false;
+        }
+
+
+
+        if(tabel.get(0).equalsIgnoreCase("INSERT")) {
+            List<String> kolone = (List<String>) object;
+
+
+            TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
+            List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
+
+            List<DBNode> listaAtributa = new ArrayList<>();
+
+
+            for (DBNode node : list) {
+                if (node.getName().equalsIgnoreCase(map.get("INSERT INTO").get(0))) {
+                    listaAtributa = ((DBNodeComposite) node).getChildren();
+                    break;
+                }
+            }
+
+            List<String> naziviAtributa = new ArrayList<>();
+            for (DBNode node : listaAtributa) {
+                naziviAtributa.add(node.getName());
+            }
+
+
+            for(String s : kolone){
+                if(!naziviAtributa.contains(s)){
+                    JOptionPane.showMessageDialog(null, "Argument " + s + " nije ispravan.");
+                    return false;
+                }
+            }
+
+        }
             return true;
     }
 }
