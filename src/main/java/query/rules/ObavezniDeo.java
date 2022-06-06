@@ -21,6 +21,8 @@ public class ObavezniDeo implements Rule {
             if(!key.contains("FROM")) {
                 JOptionPane.showMessageDialog(null, "Za SELECT upite je obavezan FROM");
                 return false;
+            }else {
+                map.put("FROM", new ArrayList<>());
             }
         }
         if(key.contains("UPDATE")){
@@ -28,6 +30,8 @@ public class ObavezniDeo implements Rule {
             if(!key.contains("SET")) {
                 JOptionPane.showMessageDialog(null, "Za UPDATE upite je obavezan SET");
                 return false;
+            }else {
+                map.put("SET", new ArrayList<>());
             }
         }
         if(key.contains("UPDATE")){
@@ -42,15 +46,18 @@ public class ObavezniDeo implements Rule {
             if(!key.contains("FROM")) {
                 JOptionPane.showMessageDialog(null, "Za DELETE upite je obavezan FROM");
                 return false;
+            }else {
+                map.put("FROM", new ArrayList<>());
             }
         }
 
         if(key.contains("INSERT")){
-            map.put("INSERT", new ArrayList<>());
+
             if(!key.contains("INTO")) {
                 JOptionPane.showMessageDialog(null, "Za INSERT upite je obavezan INTO");
                 return false;
             }
+            map.put("INSERT INTO", new ArrayList<>());
         }
 
         if(key.contains("ORDER")){
@@ -76,7 +83,12 @@ public class ObavezniDeo implements Rule {
                 JOptionPane.showMessageDialog(null, "Nispravan JOIN.Nedostaje kljucna rec ON ili USING");
                 return false;
             }
-            map.put("GROUP BY", new ArrayList<>());
+            if(key.contains("ON")){
+                map.put("ON", new ArrayList<>());
+            }else {
+                map.put("USING", new ArrayList<>());
+            }
+            map.put("JOIN", new ArrayList<>());
         }
 
         return true;

@@ -20,47 +20,65 @@ public class JoinOn implements Rule {
     public boolean check(List<String> l, Map<String, List<String>> map, Object object) {
         System.out.println("JOIN");
 
-        if(map.keySet().contains("JOIN")) {
 
 
             TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
             List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
             System.out.println("LIST " + list.isEmpty());
 
+            Map<String, List<String>> mapaJoin = (Map<String, List<String>>) object;
 
-            List<String> nazivTabele = map.get("FROM");
-            List<String> nazivTabeleJoin = map.get("JOIN");
-            System.out.println(nazivTabele.get(0));
+
+
+
+            String nazivTabele = map.get("FROM").get(0);
+            String nazivTabeleJoin = mapaJoin.get("JOIN").get(0);
+            System.out.println("Naziv TABELE " +nazivTabele);
+            System.out.println("Naziv TABELE join " +nazivTabeleJoin);
 
             List<DBNode> listaAtributa = new ArrayList<>();
             List<DBNode> listaAtributaJoin = new ArrayList<>();
 
             for (DBNode node : list) {
                 System.out.println(node.getName());
-                if (node.getName().equalsIgnoreCase(nazivTabele.get(0))) {
+                if (node.getName().equalsIgnoreCase(nazivTabele)) {
                     System.out.println("LISTA ATRIBUTA");
                     listaAtributa = ((DBNodeComposite) node).getChildren();
 
                 }
-                if (node.getName().equalsIgnoreCase(nazivTabeleJoin.get(0))) {
+                if (node.getName().equalsIgnoreCase(nazivTabeleJoin)) {
+                    map.get("JOIN").add(node.getName());
                     System.out.println("LISTA ATRIBUTA JOIN");
                     listaAtributaJoin = ((DBNodeComposite) node).getChildren();
 
                 }
                 if (!listaAtributaJoin.isEmpty() && !listaAtributa.isEmpty()) {
+                    if(map.get("JOIN").isEmpty()){
+                        JOptionPane.showMessageDialog(null,   "Tabela " + nazivTabeleJoin + " ne postoji.");
+                        return false;
+                    }
                     break;
                 }
             }
 
             String straniKljuc = "";
             if (map.keySet().contains("ON")) {
-                List<String> s = map.get("ON");
-                straniKljuc = s.get(1).replace(")", "");
+                List<String> s = mapaJoin.get("ON");
+                if(!s.get(0).contains("(") && !s.get(2).contains(")") && !s.get(1).contains("=")){
+                    JOptionPane.showMessageDialog(null, "Neispravna sintaksa za ON");
+                    return false;
+                }
+                System.out.println(s);
+                straniKljuc = s.get(2).replace(")", "");
                 String[] k = straniKljuc.split("\\.");
                 straniKljuc = k[1];
                 System.out.println("STRANI KLJUC = " + straniKljuc);
             } else {
-                List<String> s = map.get("USING");
+                List<String> s = mapaJoin.get("USING");
+                if(!s.get(0).contains("(") && !s.get(1).contains(")")){
+                    JOptionPane.showMessageDialog(null, "Neispravna sintaksa za USING");
+                    return false;
+                }
                 String h = s.get(0).replace(")", "");
                 straniKljuc = h.replace("(", "");
                 System.out.println("STRANI KLJUC  using = " + straniKljuc);
@@ -88,7 +106,7 @@ public class JoinOn implements Rule {
                     return false;
                 }
             }
-        }
+
         return true;
     }
 }

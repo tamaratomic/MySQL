@@ -27,6 +27,7 @@ public class Checker {
             rules.add(new Redosled());
             //rules.add(new ObavezniDelovi());
             rules.add(new JoinOn());
+            rules.add(new TabeleKolone());
             rules.add(new Where());
             rules.add(new GroupBy());
             rules.add(new TabeleIKolone());
@@ -179,6 +180,22 @@ public class Checker {
         ispravnost.add(rules.get(0).check(keys, mapa, null));
         if (keys.get(0).equalsIgnoreCase("SELECT")) {
             ispravnost.add(rules.get(1).check(keys, mapa, selectStatements));
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("FROM")){
+                    int j = i+1;
+                    while(true){
+                        if(j >= s.length || s[j].equalsIgnoreCase("JOIN")){
+                            break;
+                        }
+                        l.add(s[j]);
+                        j++;
+                    }
+                }
+            }
+            List<String> from = new ArrayList<>();
+            from.add("FROM");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
         } else {
             if (keys.get(0).equalsIgnoreCase("INSERT")) {
                 ispravnost.add(rules.get(1).check(keys, mapa, insertStatements));
@@ -200,6 +217,33 @@ public class Checker {
         }
 
 
+
+
+        if(keys.contains("JOIN")){
+
+            Map<String, List<String>> list = new HashMap<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("JOIN")){
+                    String key = "JOIN";
+                    list.put(key, new ArrayList<>());
+                    int j = i+1;
+                    while(true){
+                        if(j >= s.length || s[j].equalsIgnoreCase("WHERE")){
+                            break;
+                        }
+                        if(s[j].equalsIgnoreCase("ON") ||s[j].equalsIgnoreCase("USING")){
+                            key = s[j].toUpperCase();
+                            list.put(key, new ArrayList<>());
+                        }else {
+                            list.get(key).add(s[j]);
+                        }
+                        j++;
+                    }
+                }
+            }
+
+            ispravnost.add(rules.get(2).check(keys, mapa, list));
+        }
 
 
                 if (ispravnost.contains(false)) {
