@@ -247,6 +247,40 @@ public class Checker {
         }
 
 
+        if(keys.contains("UPDATE")){
+            List<String> l = new ArrayList<>();
+            for(int i = 0; i < s.length; i++){
+                if(s[i].equalsIgnoreCase("UPDATE")){
+                    List<String> from = new ArrayList<>();
+                    from.add("TABELA");
+                    ispravnost.add(rules.get(3).check(from, mapa, s[i+1]));
+                    mapa.get("UPDATE").add(s[i+1]);
+                    int j = i+3;
+                    while(true){
+                        if(j >= s.length){
+                            break;
+                        }
+                        if(!s[j].equalsIgnoreCase("AND") && !s[j].equalsIgnoreCase("OR")
+                                && !s[j].equalsIgnoreCase("WHERE")){
+                            l.add(s[j]);
+                        }
+
+                        j++;
+                    }
+                }
+            }
+            List<String> from = new ArrayList<>();
+            from.add("UPDATE");
+            ispravnost.add(rules.get(3).check(from, mapa, l));
+
+            if(ispravnost.contains(false)){
+                return false;
+            }else {
+                return true;
+            }
+
+        }
+
         //aliasi i vrednosti u select
         if(mapa.containsKey("SELECT")){
             System.out.println("CHECKER");
@@ -420,6 +454,7 @@ public class Checker {
 
 
         }
+
 
 
 

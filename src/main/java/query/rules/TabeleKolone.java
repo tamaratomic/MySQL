@@ -32,7 +32,11 @@ public class TabeleKolone implements Rule {
 
                 for(DBNode node : list){
                     if(node.getName().equalsIgnoreCase(listFrom.get(0))) {
-                        map.get("FROM").add(listFrom.get(0));
+                        if(map.containsKey("FROM")) {
+                            map.get("FROM").add(listFrom.get(0));
+                        }else{
+                            map.get("SET").add(listFrom.get(0));
+                        }
                         return true;
                     }
                     if(node.equals(list.get(list.size()-1))){
@@ -135,8 +139,14 @@ public class TabeleKolone implements Rule {
             List<DBNode> listaAtributa = new ArrayList<>();
 
 
+            String a;
+            if(!map.containsKey("FROM")){
+                a = map.get("UPDATE").get(0);
+            }else {
+                a = map.get("FROM").get(0);
+            }
             for(DBNode node : list){
-                if(node.getName().equalsIgnoreCase(map.get("FROM").get(0))) {
+                if(node.getName().equalsIgnoreCase(a)) {
                     listaAtributa = ((DBNodeComposite) node).getChildren();
                     break;
                 }
@@ -170,6 +180,60 @@ public class TabeleKolone implements Rule {
                         }
                     }
                 }
+
+                }
+            }
+
+
+        }
+
+
+
+        if(tabel.get(0).equalsIgnoreCase("UPDATE")){
+            List<String> kolone = (List<String>) object;
+
+
+            TreeItem root = MainFrame.getInstance().getAppCore().getTree().getRoot();
+            List<DBNode> list = ((DBNodeComposite) root.getDbNode()).getChildren();
+
+            List<DBNode> listaAtributa = new ArrayList<>();
+
+
+            for(DBNode node : list){
+                if(node.getName().equalsIgnoreCase(map.get("UPDATE").get(0))) {
+                    listaAtributa = ((DBNodeComposite) node).getChildren();
+                    break;
+                }
+            }
+
+            List<String> naziviAtributa = new ArrayList<>();
+            for(DBNode node:listaAtributa){
+                naziviAtributa.add(node.getName());
+            }
+
+            for(String s : kolone){
+                if(s.contains("=") || s.contains(">") || s.contains("<")){
+
+                }else {
+
+                    try {
+                        int i = Integer.valueOf(s);
+                    } catch (Exception e) {
+                        try {
+                            float f = Float.valueOf(s);
+                        } catch (Exception ex) {
+
+
+                            if (s.startsWith("'") && s.endsWith("'")) {
+
+                            } else {
+                                if (!naziviAtributa.contains(s)) {
+                                    JOptionPane.showMessageDialog(null, "Argument " + s + " nije validan.");
+                                    return false;
+                                }
+                            }
+                        }
+                    }
 
                 }
             }
