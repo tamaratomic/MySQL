@@ -1,7 +1,1 @@
-# domaci-ignjat-krdzavac-tamara-tomic
-**Ignjat Krdzavac RN 115/2020**\
-**Tamara Tomic RN 113/2020**
-
-* Škola jezika (više jezika, grupe, nivoi, sertifikati, polaznici, kursevi)
-
-bp_tim24	mmhmUUnS																								
+Project from "Big Data" course at Faculty of Computing in Belgrade.
